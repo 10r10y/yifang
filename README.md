@@ -1,4 +1,31 @@
-# yifang
+# yifang 一方知识库
+
+## Project structure
+```
+/assets
+    image.png
+    logo.png
+
+/components
+    ColumnList.vue
+    Dropdown.vue
+    ...
+
+/hooks
+    useURLloader.ts
+    ...
+
+/views
+    Home.vue
+    ...
+
+App.vue
+main.ts
+store.ts
+router.ts
+...
+
+```
 
 ## Project setup
 ```
