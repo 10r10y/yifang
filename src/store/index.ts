@@ -1,10 +1,30 @@
 import { createStore } from 'vuex';
-import { testData, testPosts, ColumnProps, PostProps } from '../testData';
+import axios from 'axios';
+
 interface UserProps {
     isLogin: boolean;
     name?: string;
     id?: number;
     columnId?: number;
+}
+interface ImageProps {
+    _id?: number;
+    url?: string;
+    createdAt?: string;
+}
+export interface ColumnProps {
+    _id: string;
+    title: string;
+    avatar?: ImageProps;
+    description: string;
+}
+export interface PostProps {
+    _id: string;
+    title: string;
+    content: string;
+    image?: string;
+    createdTime: string;
+    columnId: string;
 }
 export interface GlobalDataProps {
     columns: ColumnProps[];
@@ -14,9 +34,16 @@ export interface GlobalDataProps {
 
 const store = createStore<GlobalDataProps>({
     state: {
-        columns: testData,
-        posts: testPosts,
+        columns: [],
+        posts: [],
         user: { isLogin: true, name: 'Cricle', columnId: 1 }
+    },
+    actions: {
+        fetchColumns(context) {
+            axios.get('/columns').then(resp => {
+                context.commit('fetchColumns', resp.data)
+            })
+        }
     },
     mutations: {
         login(state) {
@@ -24,8 +51,12 @@ const store = createStore<GlobalDataProps>({
         },
         createPost(state, newPost){
             state.posts.push(newPost);
+        },
+        fetchColumns(state, rawData){
+            state.columns = rawData.data.list;
         }
     }
+    
 })
 
 export default store;
