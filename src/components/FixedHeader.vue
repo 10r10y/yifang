@@ -1,17 +1,17 @@
 <template>
     <nav class="navbar navbar-dark bg-primary justify-content-between mb-4 px-4">
-        <a class="navbar-brand" href="#">一方</a>
+        <router-link class="navbar-brand" to="/">一方</router-link>
+
         <!-- 未登录 -->
         <ul v-if="!user.isLogin" class="list-inline mb-0">
-            <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">登陆</a></li>
-            <li class="list-inline-item"><a href="#" class="btn btn-outline-light my-2">注册</a></li>
+            <li class="list-inline-item"><router-link to="/login" class="btn btn-outline-light my-2">登陆</router-link></li>
+            <li class="list-inline-item"><router-link to="/login" class="btn btn-outline-light my-2">注册</router-link></li>
         </ul>
         <!-- 已登录 -->
-        
         <ul v-if="user.isLogin" class="list-inline mb-0">
             <li class="list-inline-item">
                 <Dropdown :title="`你好 ${user.name}`">
-                    <DropdownItem><a href="#" class="dropdown-item">新建文章</a></DropdownItem>
+                    <DropdownItem><router-link to="/create" class="dropdown-item">新建文章</router-link></DropdownItem>
                     <DropdownItem disabled><a href="#" class="dropdown-item">编辑资料</a></DropdownItem>
                     <DropdownItem><a href="#" class="dropdown-item">退出登陆</a></DropdownItem>
                 </Dropdown>
@@ -33,7 +33,7 @@
     }
 
     export default defineComponent({
-        name: 'HomeHeader',
+        name: 'FixedHeader',
         props: {
             user: {
                 type: Object as PropType<UserProps>,

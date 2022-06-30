@@ -1,37 +1,37 @@
 <template>
   <div class="container">
-    <HomeHeader :user="currentUser"></HomeHeader>
-    <Login></Login>
-    <Home></Home>
+    <FixedHeader :user="currentUser"></FixedHeader>
+    <router-view></router-view>
+    <footer class="text-center py-4 text-secondary bg-light mt-6">
+      <small>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">© 2020 者也专栏</li>
+          <li class="list-inline-item">课程</li>
+          <li class="list-inline-item">文档</li>
+          <li class="list-inline-item">联系</li>
+          <li class="list-inline-item">更多</li>
+        </ul>
+      </small>
+    </footer>
   </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent, reactive, ref } from 'vue';
-  import 'bootstrap/dist/css/bootstrap.min.css';
-  import HomeHeader, { UserProps } from './components/HomeHeader.vue';
-  import Home from './views/Home.vue';
-  import Login from './views/Login.vue'
-
-
-  // 测试数据
-  const currentUser: UserProps = {
-    isLogin: true,
-    name: 'viki',
-    id: 1
-  }
+  import { defineComponent, computed } from 'vue';
+  import 'bootstrap/dist/css/bootstrap.min.css';  // bootstrap 全局引入
+  import FixedHeader, { UserProps } from './components/FixedHeader.vue';
+  import { useStore } from 'vuex';
 
   export default defineComponent({
     name: 'App',
     components: {
-      HomeHeader,
-      Home,
-      Login,
+      FixedHeader,
     },
     setup(){
-
+      const store = useStore();
+      const currentUser = computed(() => store.state.user);
       return {
-        currentUser: currentUser,
+        currentUser
       }
     }
   })

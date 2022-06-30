@@ -6,7 +6,7 @@
                     <img :src="column.avatar" alt="Column img" class="rounded-circle border border-light w-25 my-3">
                     <h5 class="card-title">{{column.title}}</h5>
                     <p class="card-text text-left">{{column.description}}</p>
-                    <a href="#" class="btn btn-outline-primary">进入专栏</a>
+                    <router-link :to="`/column/${column.id}`" class="btn btn-outline-primary">进入专栏</router-link>
                 </div>
             </div>
         </div>
@@ -15,14 +15,8 @@
 
 <script lang="ts">
     import { defineComponent, PropType, computed } from 'vue';
-
-    // Column API 接口类型
-    export interface ColumnProps {
-        id: number;
-        title: string;
-        avatar?: string;
-        description: string;
-    }
+    import { ColumnProps } from '../testData';
+    
 
     export default defineComponent({
         name: 'ColumnList',

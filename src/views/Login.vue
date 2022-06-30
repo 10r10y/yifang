@@ -6,8 +6,7 @@
         <div class="mb-3">
           <label class="form-label">邮箱地址</label>
           <ValidateInput 
-            ref="inputRef"
-            :rules="emailRules" 
+            :rules="emailRules"
             v-model="emailVal"
             placeholder="请输入邮箱地址"
             type="text"
@@ -34,46 +33,54 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, reactive, ref } from 'vue';
-    import 'bootstrap/dist/css/bootstrap.min.css';
+    import { defineComponent, ref } from 'vue';
+    import { useRouter } from 'vue-router';   // 定义路由行为钩子
+    import { useStore } from 'vuex'
     import ValidateInput, { RulesProp } from '../components/ValidateInput.vue';
     import ValidateForm from '../components/ValidateForm.vue';
 
     
     export default defineComponent({
-    name: 'App',
-    components: {
-        ValidateForm,
-        ValidateInput
-    },
-    setup(){
+      name: 'App',
+      components: {
+          ValidateForm,
+          ValidateInput
+      },
+      setup(){
+        const router = useRouter();
+        const store = useStore();
+
         const inputRef = ref<any>();    // 获取子组件实例
-        let emailVal = ref('');
-        let passwordVal = ref('');
+        const emailVal = ref('');
         // 邮箱验证
         const emailRules: RulesProp = [
-        {type: 'required', message: '邮箱地址不能为空'},
-        {type: 'email', message: '请输入合法邮箱地址'}
+          {type: 'required', message: '邮箱地址不能为空'},
+          {type: 'email', message: '请输入合法邮箱地址'}
         ]
         // 密码验证
         const passwordRules: RulesProp = [
-        {type: 'required', message: '密码不能为空'},
-        {type: 'range', message: '密码至少六位，且不能含有空格'}
+          {type: 'required', message: '密码不能为空'},
+          {type: 'range', message: '密码至少六位，且不能含有空格'}
         ]
 
         // 函数监听子组件自定义事件传回的结果
         const onFormSubmit = (result: boolean) => {
-        inputRef.value.validateInput();
+          // 如果验证成功
+          if(result) {
+            // 路由跳转到首页
+            router.push(`/column/${1}`);
+            store.commit('login');
+          }
         }
 
         return {
-        emailRules,
-        passwordRules,
-        emailVal,
-        onFormSubmit,
-        inputRef
+          emailRules,
+          passwordRules,
+          emailVal,
+          onFormSubmit,
+          
         }
-    }
+      }
     })
 </script>
 

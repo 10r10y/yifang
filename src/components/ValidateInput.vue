@@ -1,6 +1,7 @@
 <template>
     <div class="validate-input-container pb-3">
         <input 
+            v-if="tag !== 'textarea'"
             v-bind="$attrs"
             class="form-control" 
             :class="{'is-invalid': inputRef.error}"
@@ -8,6 +9,15 @@
             @input="updateValue"
             @blur="validateInput"
         >
+        <textarea
+            v-else
+            v-bind="$attrs"
+            class="form-control" 
+            :class="{'is-invalid': inputRef.error}"
+            :value="inputRef.val"
+            @input="updateValue"
+            @blur="validateInput"
+        ></textarea>
         <span v-if="inputRef.error" class="invalid-feedback">
             {{inputRef.message}}
         </span>
@@ -26,6 +36,8 @@
     const emailReg = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
     export type RulesProp = RuleProp[];
+    // 使用字符串字面量，规定两种输入框
+    export type TagType = 'input' | 'textarea';
 
     export default defineComponent({
         name: 'Validateinput',
@@ -33,7 +45,12 @@
             // 用于接收规则
             rules: Array as PropType<RulesProp>,
             // 用于数据双向绑定
-            modelValue: String
+            modelValue: String,
+            // 传入想渲染的输入框类型
+            tag: {
+                type: String as PropType<TagType>,
+                default: 'input'
+            }
         },
         // 父组件传递的非 prop 的 attribute，设置为不在子组件根节点接收
         // 然后将 attribute 用 $attrs 设置
