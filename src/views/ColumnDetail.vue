@@ -2,7 +2,7 @@
     <div class="column-detail-page w-75 mx-auto">
         <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
             <div class="col-3 text-center">
-                <img :src="column.avatar" :alt="column.title" class="rounded-circle border ">
+                <img :src="column.avatar.url" :alt="column.title" class="rounded-circle border w-100">
             </div>
             <div class="col-9">
                 <h4>{{column.title}}</h4>
@@ -14,10 +14,11 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent } from 'vue';
+    import { defineComponent, computed, onMounted } from 'vue';
     import { useRoute } from 'vue-router';  // 获取路由信息钩子
-    import { testData, testPosts} from '../testData';
+    import store from '../store/index';
     import PostList from '../components/PostList.vue';
+    
 
     export default defineComponent({
         name: 'ColumnDetail',
@@ -26,10 +27,15 @@
         },
         setup() {
             const route = useRoute();
-            const currentId = +route.params.id;
+            const currentId = route.params.id;
 
-            const column = testData.find(c => c.id === currentId);
-            const list = testPosts.filter(post => post.columnId === currentId);
+            onMounted(() => {
+                store.dispatch('fetchColumn', currentId);
+                store.dispatch('fetchPosts', currentId);
+            })
+
+            const column = computed(() => store.getters.getColumnById(currentId));
+            const list = computed(() => store.getters.getPostsByCid(currentId));
 
             return {
                 column,

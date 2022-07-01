@@ -34,7 +34,7 @@
     import ValidateForm from '../components/ValidateForm.vue';
     import ValidateInput, { RulesProp } from '../components/ValidateInput.vue';
     import { GlobalDataProps } from '../store/index';
-    import { PostProps } from '../testData';
+    import { PostProps } from '../store/index';
 
 
     export default defineComponent({
@@ -60,11 +60,11 @@
                 if(result){
                     if(columnId){
                         const newPost: PostProps = {
-                            id: new Date().getTime(),
+                            _id: new Date().getTime().toString(),
                             title: titleVal.value,
                             content: contentVal.value,
-                            columnId,
-                            createdTime: new Date().toLocaleString()
+                            column: columnId,
+                            createdAt: new Date().toLocaleString()
                         }
                         store.commit('createPost', newPost);
                         router.push(`/column/${columnId}`);

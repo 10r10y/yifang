@@ -20,6 +20,13 @@ axios.get("columns").then(resp => {
     console.log(resp.data);
 })
 
+async function hello() {
+  const greeting = await Promise.resolve('Hello');
+  return greeting
+}
+console.log(hello())
+hello().then(value => console.log(value))
+
 const app = createApp(App);
 
 app.use(router);
