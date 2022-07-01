@@ -1,4 +1,4 @@
-import { createStore } from 'vuex';
+import { Commit, createStore } from 'vuex';
 import axios from 'axios';
 
 interface UserProps {
@@ -33,33 +33,28 @@ export interface GlobalDataProps {
     user: UserProps;
 }
 
+const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
+    const { data } = await axios.get(url);
+    commit (mutationName, data);
+}
+
 const store = createStore<GlobalDataProps>({
     state: {
         columns: [],
         posts: [],
         user: { isLogin: true, name: 'Cricle', columnId: '1' }
     },
-    // 异步操作需要放到 actions
     actions: {
-        async fetchColumns(context) {
-            const { data } = await axios.get('/columns');
-            context.commit('fetchColumns', data);
-            /* axios.get('columns').then(resp => {
-                // commit: actions -> mutations
-                context.commit('fetchColumns', resp.data)
-            }) */
+        fetchColumns({ commit }) {
+            getAndCommit('/columns', 'fetchColumns', commit);
         },
-        // 获取专栏内部信息，包括 posts 列表
-        fetchColumn({ commit }, cid) {      // { commit } 直接从 context 中取出 commit 方法
-            axios.get(`columns/${cid}`).then(resp => {
-                commit('fetchColumn', resp.data)
-            })
+        // 获取专栏内部信息
+        fetchColumn({ commit }, cid) { 
+            getAndCommit(`/columns/${cid}`, 'fetchColumn', commit);
         },
         // 获取专栏文章列表文章
-        fetchPosts({ commit }, cid) {
-            axios.get(`columns/${cid}/posts`).then(resp => {
-                commit('fetchPosts', resp.data);
-            })
+        fetchPosts({ commit }, cid) { 
+            getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit);
         },
 
     },
