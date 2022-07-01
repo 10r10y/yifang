@@ -20,12 +20,17 @@ axios.get("columns").then(resp => {
     console.log(resp.data);
 })
 
-async function hello() {
-  const greeting = await Promise.resolve('Hello');
-  return greeting
-}
-console.log(hello())
-hello().then(value => console.log(value))
+// axios 拦截器，提供钩子：请求时返回结果前
+axios.interceptors.request.use(config => {
+  store.commit('setLoading', true);
+  return config;
+})
+// 返回结果后
+axios.interceptors.response.use(config => {
+  store.commit('setLoading', false);
+  return config;
+})
+
 
 const app = createApp(App);
 
