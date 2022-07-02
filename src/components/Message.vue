@@ -1,6 +1,6 @@
 <template>
     <teleport to="#message">
-        <div class="alert alert-danger hide fixed-top w-50 mx-auto d-flex justify-content-between mt-2" 
+        <div class="alert hide fixed-top w-50 mx-auto d-flex justify-content-between mt-2" 
             v-if="isVisible"
             :class="classObject"
             role="alert"

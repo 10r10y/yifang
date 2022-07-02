@@ -2,7 +2,6 @@
   <div class="container">
     <FixedHeader :user="currentUser"></FixedHeader>
     <Loading v-if="isLoading" text="正在努力加载中..." background="rgba(255, 255, 255, 0.8)"></Loading>
-    <!-- <message type="error" :message="error.message" v-if="error.status"></message> -->
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
       <small>
@@ -27,7 +26,7 @@
   // 引入各组件
   import FixedHeader from './components/FixedHeader.vue';
   import Loading from './components/Loading.vue';
-  // import Message from './components/Message.vue';
+
   // 引入函数
   import createMessage from './hooks/useCreatMessage';
   // 引入类型
@@ -38,7 +37,6 @@
     components: {
       FixedHeader,
       Loading,
-      // Message
     },
     setup(){
       const store = useStore<GlobalDataProps>();

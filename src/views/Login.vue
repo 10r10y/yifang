@@ -39,6 +39,7 @@
     import { useStore } from 'vuex'
     import ValidateInput, { RulesProp } from '../components/ValidateInput.vue';
     import ValidateForm from '../components/ValidateForm.vue';
+    import createMessage from '../hooks/useCreatMessage';
 
     
     export default defineComponent({
@@ -75,8 +76,11 @@
             }
             store.dispatch('loginAndFetch', payload).then(data => {
               console.log(data);
-              // 路由跳转到首页
-              router.push(`/`);
+              createMessage('恭喜您，登陆成功', 'success', 2000);
+              // 2s后路由跳转到首页
+              setTimeout(() => {
+                router.push(`/`);
+              }, 2000);
             }).catch(e => {
               console.log(e);
               
