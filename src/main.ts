@@ -20,15 +20,25 @@ axios.get("columns").then(resp => {
     console.log(resp.data);
 })
 
-// axios 拦截器，提供钩子：请求时返回结果前
+
+// axios 请求拦截器，提供钩子：请求时返回结果前
 axios.interceptors.request.use(config => {
   store.commit('setLoading', true);
+  // 每次提交重置信息，以便触发错误提示
+  store.commit('setError', { status: false, message: ''});
   return config;
 })
-// 返回结果后
-axios.interceptors.response.use(config => {
+
+// axios 响应拦截器：返回结果后
+axios.interceptors.response.use(response => {
   store.commit('setLoading', false);
-  return config;
+  return response;
+}, e => {    // 添加错误拦截
+  const { error} = e.response.data;
+  store.commit('setError', { status: true, message: error});
+  store.commit('setLoading', false);
+
+  return Promise.reject(error);
 })
 
 

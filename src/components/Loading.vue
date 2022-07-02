@@ -13,6 +13,7 @@
 
 <script lang="ts">
     import { defineComponent, onUnmounted } from 'vue';
+    import useDOMCreate from '../hooks/useDOMCreate';
 
     export default defineComponent({
         name: 'Loading',
@@ -25,7 +26,7 @@
             }
         },
         setup(){
-            // 在挂载之前创建一个标记节点，供 teleport 定位
+            /* // 在挂载之前创建一个标记节点，供 teleport 定位
             const node = document.createElement('div');
             node.id = 'back';
             document.body.appendChild(node);
@@ -33,7 +34,8 @@
             // 组件卸载后清除节点
             onUnmounted(() => {
                 document.body.removeChild(node);
-            })
+            }) */
+            useDOMCreate('back');
         }
     })
 </script>

@@ -17,6 +17,7 @@
           <label class="form-label">Password</label>
           <ValidateInput 
             :rules="passwordRules"
+            v-model="passwordVal"
             placeholder="请输入密码"
             type="password"
           ></ValidateInput>
@@ -52,6 +53,7 @@
 
         const inputRef = ref<any>();    // 获取子组件实例
         const emailVal = ref('');
+        const passwordVal = ref('');
         // 邮箱验证
         const emailRules: RulesProp = [
           {type: 'required', message: '邮箱地址不能为空'},
@@ -65,11 +67,20 @@
 
         // 函数监听子组件自定义事件传回的结果
         const onFormSubmit = (result: boolean) => {
-          // 如果验证成功
+          // 如果输入验证成功
           if(result) {
-            // 路由跳转到首页
-            router.push(`/column/${1}`);
-            store.commit('login');
+            const payload = {
+              email: emailVal.value,
+              password: passwordVal.value
+            }
+            store.dispatch('loginAndFetch', payload).then(data => {
+              console.log(data);
+              // 路由跳转到首页
+              router.push(`/`);
+            }).catch(e => {
+              console.log(e);
+              
+            })
           }
         }
 
@@ -77,8 +88,8 @@
           emailRules,
           passwordRules,
           emailVal,
+          passwordVal,
           onFormSubmit,
-          
         }
       }
     })

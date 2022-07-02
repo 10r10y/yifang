@@ -10,7 +10,7 @@
         <!-- 已登录 -->
         <ul v-if="user.isLogin" class="list-inline mb-0">
             <li class="list-inline-item">
-                <Dropdown :title="`你好 ${user.name}`">
+                <Dropdown :title="`你好 ${user.nickName}`">
                     <DropdownItem><router-link to="/create" class="dropdown-item">新建文章</router-link></DropdownItem>
                     <DropdownItem disabled><a href="#" class="dropdown-item">编辑资料</a></DropdownItem>
                     <DropdownItem><a href="#" class="dropdown-item">退出登陆</a></DropdownItem>
@@ -24,13 +24,7 @@
     import { defineComponent, PropType } from 'vue';
     import Dropdown from './Dropdown.vue';
     import DropdownItem from './DropdownItem.vue';
-    
-
-    export interface UserProps {
-        isLogin: boolean;
-        name?: string;
-        id?: number;
-    }
+    import { UserProps } from '../store/index'
 
     export default defineComponent({
         name: 'FixedHeader',

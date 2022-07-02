@@ -56,18 +56,18 @@
             const router = useRouter();
             const store = useStore<GlobalDataProps>();
             const onFormSubmit = (result: boolean) => {
-                const { columnId } = store.state.user;
+                const { column } = store.state.user;
                 if(result){
-                    if(columnId){
+                    if(column){
                         const newPost: PostProps = {
                             _id: new Date().getTime().toString(),
                             title: titleVal.value,
                             content: contentVal.value,
-                            column: columnId,
+                            column: column,
                             createdAt: new Date().toLocaleString()
                         }
                         store.commit('createPost', newPost);
-                        router.push(`/column/${columnId}`);
+                        router.push(`/column/${column}`);
                     }
                     
                 }
