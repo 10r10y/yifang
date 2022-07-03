@@ -1,15 +1,8 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router/index';
-import store from './store/index';
+import router from './router';
+import store from './store';
 import axios from 'axios';
-
-// ······················································
-import {h} from 'vue';
-const vnode = h('div', { id: 'foo'}, 'children')
-console.log(vnode)
-
-// ······················································
 
 axios.defaults.baseURL = "http://apis.imooc.com/api/";
 axios.interceptors.request.use(config => {
@@ -42,8 +35,9 @@ axios.interceptors.response.use(response => {
   
   return response;
 }, e => {    // 添加错误拦截
-  const { error} = e.response.data;
+  const { error } = e.response.data;
   store.commit('setError', { status: true, message: error});
+  // 这里有问题，只要有错误，登录状态就会 false
   store.commit('setLoading', false);
 
   return Promise.reject(error);

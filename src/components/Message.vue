@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, PropType, ref} from 'vue';
+    import { defineComponent, PropType, ref } from 'vue';
     import useDOMCreate from '../hooks/useDOMCreate';
     export type MessageType = 'success' | 'error' | 'default';
     export default defineComponent({

@@ -98,6 +98,9 @@ const store = createStore<GlobalDataProps>({
             // HTTP 请求的头信息中添加 token
             axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         },
+        logOut(state) {
+            state.user.isLogin = false;
+        },
         createPost(state, newPost) {
             state.posts.push(newPost);
         },

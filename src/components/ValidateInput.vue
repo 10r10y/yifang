@@ -29,8 +29,9 @@
     import { emitter } from './ValidateForm.vue';
 
     interface RuleProp {
-        type: 'email' | 'required' | 'range';
+        type: 'email' | 'required' | 'range' | 'custom';
         message: string;
+        validator?: () => boolean;      // 传入函数参数作为自定义规则
     }
 
     const emailReg = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -82,6 +83,9 @@
                                 break;
                             case 'range':
                                 passed = (inputRef.val.trim().length >= 6 && inputRef.val.indexOf(' ') === -1);
+                                break;
+                            case 'custom':
+                                passed = rule.validator ? rule.validator() : true;
                                 break;
                             default:
                                 break;

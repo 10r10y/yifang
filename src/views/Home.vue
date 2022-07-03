@@ -21,7 +21,7 @@
     import 'bootstrap/dist/css/bootstrap.min.css';
     import ColumnList from '../components/ColumnList.vue';
     import { useStore } from 'vuex';
-    import { GlobalDataProps } from '../store/index';
+    import { GlobalDataProps } from '../store';
 
     export default defineComponent({
     name: 'App',

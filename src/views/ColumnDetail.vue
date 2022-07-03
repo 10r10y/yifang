@@ -16,7 +16,7 @@
 <script lang="ts">
     import { defineComponent, computed, onMounted } from 'vue';
     import { useRoute } from 'vue-router';  // 获取路由信息钩子
-    import store from '../store/index';
+    import store from '../store';
     import PostList from '../components/PostList.vue';
     
 

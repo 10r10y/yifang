@@ -31,7 +31,7 @@
   import createMessage from './components/CreatMessage';
 
   // 引入类型
-  import { GlobalDataProps } from './store/index';
+  import { GlobalDataProps } from './store';
 
   export default defineComponent({
     name: 'App',

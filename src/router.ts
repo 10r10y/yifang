@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import Home from '../views/Home.vue';
-import Login from '../views/Login.vue';
-import ColumnDetail from '../views/ColumnDetail.vue';
-import CreatePost from '../views/CreatePost.vue';
-import store from '../store/index';
+import Home from './views/Home.vue';
+import Login from './views/Login.vue';
+import ColumnDetail from './views/ColumnDetail.vue';
+import CreatePost from './views/CreatePost.vue';
+import store from './store';
+import SignIn from './views/SignIn.vue';
 
 const routerHistory = createWebHistory();
 
@@ -15,6 +16,14 @@ const router = createRouter({
             path: '/',
             name: 'home',
             component: Home
+        },
+        {   // 注册页面
+            path: '/signin',
+            name: 'signin',
+            component: SignIn,
+            meta: {
+                
+            }
         },
         {   // 登录页面：如果已登录，重定向为首页
             path: '/login',
