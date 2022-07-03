@@ -8,7 +8,7 @@ export interface UserProps {
     column?: string;
     email?: string;
 }
-interface ImageProps {
+export interface ImageProps {
     _id?: number;
     url?: string;
     createdAt?: string;
@@ -39,6 +39,13 @@ export interface GlobalDataProps {
     user: UserProps;
     loading: boolean;
     error: GlobalErrorProps;
+}
+
+// 响应信息接口
+export interface ResponseType<P = Record<string, unknown>> {     // 为 data 设置泛型，默认值为空对象
+    code: number;
+    msg: string;
+    data: P;
 }
 
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {

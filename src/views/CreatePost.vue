@@ -1,6 +1,7 @@
 <template>
     <div class="create-post-page">
         <h4>新建文章</h4>
+        
         <ValidateForm @form-submit="onFormSubmit">
             <template #default>
                 <label >文章标题：</label>
@@ -31,6 +32,7 @@
     import { defineComponent, ref } from 'vue';
     import { useRouter } from 'vue-router';
     import { useStore } from 'vuex';
+
     import ValidateForm from '../components/ValidateForm.vue';
     import ValidateInput, { RulesProp } from '../components/ValidateInput.vue';
     import { GlobalDataProps, PostProps } from '../store';
@@ -55,8 +57,8 @@
             const router = useRouter();
             const store = useStore<GlobalDataProps>();
             const onFormSubmit = (result: boolean) => {
-                const { column } = store.state.user;
                 if(result){
+                    const { column } = store.state.user;
                     if(column){
                         const newPost: PostProps = {
                             _id: new Date().getTime().toString(),
@@ -71,6 +73,8 @@
                     
                 }
             }
+
+            
 
             return {
                 titleVal,
