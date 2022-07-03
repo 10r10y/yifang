@@ -28,7 +28,8 @@
   import Loading from './components/Loading.vue';
 
   // 引入函数
-  import createMessage from './hooks/useCreatMessage';
+  import createMessage from './components/CreatMessage';
+
   // 引入类型
   import { GlobalDataProps } from './store/index';
 
@@ -57,14 +58,14 @@
       watch(() => error.value.status, () => {
         const {status, message } = error.value;
         if(status && message) {
-          createMessage(message, 'error');
+          createMessage(message, 'error', 2000);
         }
       })
 
       return {
         currentUser,
         isLoading,
-        error
+        error,
       }
     }
   })

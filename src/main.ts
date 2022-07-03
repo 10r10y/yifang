@@ -4,6 +4,13 @@ import router from './router/index';
 import store from './store/index';
 import axios from 'axios';
 
+// ······················································
+import {h} from 'vue';
+const vnode = h('div', { id: 'foo'}, 'children')
+console.log(vnode)
+
+// ······················································
+
 axios.defaults.baseURL = "http://apis.imooc.com/api/";
 axios.interceptors.request.use(config => {
     // get 请求，添加到 url 中
@@ -41,6 +48,8 @@ axios.interceptors.response.use(response => {
 
   return Promise.reject(error);
 })
+
+
 
 
 const app = createApp(App);

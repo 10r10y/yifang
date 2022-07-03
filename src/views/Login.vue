@@ -39,7 +39,7 @@
     import { useStore } from 'vuex'
     import ValidateInput, { RulesProp } from '../components/ValidateInput.vue';
     import ValidateForm from '../components/ValidateForm.vue';
-    import createMessage from '../hooks/useCreatMessage';
+    import createMessage from '../components/CreatMessage';
 
     
     export default defineComponent({
