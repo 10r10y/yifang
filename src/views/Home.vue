@@ -1,6 +1,5 @@
 <template>
     <div class="home-page">
-    <Uploader action="/upload" :beforeUpload="beforeUpload" @file-uploaded="onFileUploaded"></Uploader>
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
@@ -22,15 +21,13 @@
     import 'bootstrap/dist/css/bootstrap.min.css';
     import ColumnList from '../components/ColumnList.vue';
     import { useStore } from 'vuex';
-    import { GlobalDataProps, ResponseType, ImageProps } from '../store';
-    import Uploader from '../components/Uploader.vue';
+    import { GlobalDataProps, ResponseType } from '../store';
     import createMessage from '../components/CreatMessage';
 
     export default defineComponent({
     name: 'App',
     components: {
-        ColumnList,
-        Uploader
+        ColumnList
     },
     setup(){
         const store = useStore<GlobalDataProps>();

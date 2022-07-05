@@ -13,7 +13,7 @@
                 <Dropdown :title="`你好 ${user.nickName}`">
                     <DropdownItem><router-link to="/create" class="dropdown-item">新建文章</router-link></DropdownItem>
                     <DropdownItem disabled><a href="#" class="dropdown-item">编辑资料</a></DropdownItem>
-                    <DropdownItem><button @click="logOut" class="dropdown-item">退出登陆</button></DropdownItem>
+                    <DropdownItem><router-link to="/" @click="logOut" class="dropdown-item">退出登陆</router-link></DropdownItem>
                 </Dropdown>
             </li>
         </ul>
@@ -26,6 +26,7 @@
     import Dropdown from './Dropdown.vue';
     import DropdownItem from './DropdownItem.vue';
     import { UserProps } from '../store'
+    import router from '../router';
 
     export default defineComponent({
         name: 'FixedHeader',
@@ -43,7 +44,6 @@
             const store = useStore();
 
             const logOut = () => {
-                localStorage.removeItem('token');
                 store.commit('logOut');
             }
             

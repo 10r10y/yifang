@@ -43,17 +43,7 @@
       const store = useStore<GlobalDataProps>();
       const currentUser = computed(() => store.state.user);
       const isLoading = computed(()=> store.state.loading);
-      const token = computed(()=> store.state.token);
       const error = computed(() => store.state.error);
-
-      onMounted(() => {
-        // 判断 用户未登录， 且 token 存在
-        if(!currentUser.value.isLogin && token.value){
-          // 设置 Authorization 头，发送 fetchCurrentUser 请求
-          axios.defaults.headers.common.Authorization = `Bearer ${token.value}`;
-          store.dispatch('fetchCurrentUser');
-        }
-      });
 
       watch(() => error.value.status, () => {
         const {status, message } = error.value;

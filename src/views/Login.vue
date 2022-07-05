@@ -75,12 +75,11 @@
               password: passwordVal.value
             }
             store.dispatch('loginAndFetch', payload).then(data => {
-              console.log(data);
               createMessage('恭喜您，登陆成功', 'success', 2000);
-              // 2s后路由跳转到首页
+              // 1s后路由跳转到首页
               setTimeout(() => {
                 router.push(`/`);
-              }, 2000);
+              }, 1000);
             }).catch(e => {
               console.log(e);
               

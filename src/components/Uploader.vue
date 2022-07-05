@@ -1,16 +1,22 @@
 <template>
     <div class="filr-upload">
+        <div class="file-upload-container" @click="triggerUpload" v-bind="$attrs">
+            <slot v-if="fileStatus === 'ready'" name="default">
+                <button class="btn btn-primary">点击上传</button>
+            </slot>
+            <slot v-else-if="fileStatus === 'success'" name="uploaded" :uploadedData="uploadedData">
+                <button class="btn btn-primary">上传成功</button>
+            </slot>
+            <slot v-else  name="loading">
+                <button class="btn btn-primary">正在上传</button>
+            </slot>
+        </div>
         <input 
             type="file" 
             class="file-input d-none" 
             ref="fileInput"
             @change.prevent="handleFileChange"
         >
-        <button class="btn btn-primary" @click="triggerUpload">
-            <span v-if="fileStatus === 'ready'">点击上传</span>
-            <span v-else-if="fileStatus === 'success'">上传成功</span>
-            <span v-else>正在上传</span>
-        </button>
     </div>
 </template>
 
@@ -36,9 +42,14 @@
                 type: Function as PropType<CheckFunction>
             }
         },
+
+        // 不希望组件的根元素继承其它特性，结合 $attrs 使用
+        inheritAttrs: false,
+
         emits: ['file-uploaded','file-uploaded-error'],
 
         setup(props, context){
+            const uploadedData = ref();
             const fileStatus = ref<UploadStatus>('ready');
 
             // 一个隐藏起来的 input-file
@@ -76,6 +87,8 @@
                     }).then(resp => {
                         // 提供成功钩子
                         context.emit('file-uploaded', resp.data);
+                        // 向父组件传递（Scoped Slots）
+                        uploadedData.value = resp.data;
                         // 设置状态
                         fileStatus.value = 'success'
                     }).catch( e => {         
@@ -99,7 +112,8 @@
                 fileInput,
                 fileStatus,
                 triggerUpload,
-                handleFileChange
+                handleFileChange,
+                uploadedData
             }
         }
     })

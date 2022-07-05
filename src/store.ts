@@ -4,14 +4,17 @@ import axios from 'axios';
 export interface UserProps {
     isLogin: boolean;
     nickName?: string;
-    _id?: number;
+    _id?: string;
     column?: string;
     email?: string;
+    avatar?: ImageProps;
+    description?: string;
 }
 export interface ImageProps {
-    _id?: number;
+    _id?: string;
     url?: string;
     createdAt?: string;
+    fitUrl?: string;
 }
 export interface ColumnProps {
     _id: string;
@@ -20,13 +23,15 @@ export interface ColumnProps {
     description: string;
 }
 export interface PostProps {
-    _id: string;
+    _id?: string;
     title: string;
     excerpt?: string;
     content?: string;
-    image?: ImageProps;
-    createdAt: string;
+    image?: ImageProps | string;
+    author?: string | UserProps;
     column: string;
+    createdAt?: string;
+    isHTML?: boolean;
 }
 export interface GlobalErrorProps {
     status: boolean;
@@ -51,6 +56,7 @@ export interface ResponseType<P = Record<string, unknown>> {     // 为 data 设
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
     const { data } = await axios.get(url);
     commit (mutationName, data);
+    return data;
 }
 
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
@@ -70,24 +76,29 @@ const store = createStore<GlobalDataProps>({
         error: { status: false}
     },
     actions: {
+        // 获取专栏列表
         fetchColumns({ commit }) {
-            getAndCommit('/columns', 'fetchColumns', commit);
+            return getAndCommit('/columns', 'fetchColumns', commit);
         },
         // 获取专栏内部信息
         fetchColumn({ commit }, cid) { 
-            getAndCommit(`/columns/${cid}`, 'fetchColumn', commit);
+            return getAndCommit(`/columns/${cid}`, 'fetchColumn', commit);
         },
         // 获取专栏文章列表文章
-        fetchPosts({ commit }, cid) { 
-            getAndCommit(`/columns/${cid}/posts`, 'fetchPosts', commit);
+        fetchPosts({ commit }, id) { 
+            return getAndCommit(`/columns/${id}/posts`, 'fetchPosts', commit);
         },
-        
+        // 获取文章内部信息
+        fetchPost({ commit }, cid) {
+            return getAndCommit(`/posts/${cid}`, 'fetchPost', commit);
+        },
+
         login({ commit }, payload) {
             return postAndCommit('/user/login', 'login', commit, payload);
         },
         // 获取当前用户信息
         fetchCurrentUser({ commit }) {
-            getAndCommit('/user/current', 'fetchCurrentUser', commit);
+            return getAndCommit('/user/current', 'fetchCurrentUser', commit);
         },
 
         // 组合 action：登录成功后获取用户信息
@@ -95,7 +106,12 @@ const store = createStore<GlobalDataProps>({
             return dispatch('login', loginData).then(()=> {
                 return dispatch('fetchCurrentUser');
             })
-        }
+        },
+
+        // 创建文章
+        createPost({ commit }, payload) {
+            return postAndCommit('/posts', 'createPost', commit, payload);
+        },
     },
     mutations: {
         login(state, rawData) {
@@ -106,7 +122,11 @@ const store = createStore<GlobalDataProps>({
             axios.defaults.headers.common.Authorization = `Bearer ${token}`;
         },
         logOut(state) {
-            state.user.isLogin = false;
+            // state.user.isLogin = false;
+            state.token = '';
+            state.user = { isLogin: false };
+            localStorage.removeItem('token');
+            delete axios.defaults.headers.common.Authorization;
         },
         createPost(state, newPost) {
             state.posts.push(newPost);
@@ -119,6 +139,9 @@ const store = createStore<GlobalDataProps>({
         },
         fetchPosts(state, rawData) {
             state.posts = rawData.data.list
+        },
+        fetchPost(state, rawData) {
+            state.posts = [rawData.data]
         },
         setLoading(state, status) {
             state.loading = status
@@ -139,6 +162,9 @@ const store = createStore<GlobalDataProps>({
         },
         getPostsByCid:(state) => (cid: string) => {
             return state.posts.filter(post => post.column === cid)
+        },
+        getPostById:(state) => (id: string) => {
+            return state.posts.find(p => p._id === id)
         }
     }
     
