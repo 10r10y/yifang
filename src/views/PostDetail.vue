@@ -5,16 +5,16 @@
         </div>
         <h2 class="mb-4">{{currentPost.title}}</h2>
         <div class="user-profile-component border-top border-bottom py-3 mb-5 align-items-center row g-0">
-            <div class="col">
+            <div class=" col-12 col-md-6">
                 <AuthorProfile v-if="typeof currentPost.author === 'object'"  :author="currentPost.author"></AuthorProfile>
             </div>
             <span class="text-muted col text-right font-italic block">发表于 {{currentPost.createdAt}}</span>
         </div>  
         
         <div v-html="currentHTML"></div>
-        <div class="handle">
-            <button>编辑</button>
-            <button>删除</button>
+        <div v-if="showEditArea" class="btn-group mt-5">
+            <router-link :to="`/create?id=${currentPost._id}`" type="button" class="btn btn-primary">编辑</router-link>
+            <button type="button" class="btn btn-danger">删除</button>
         </div>
     </article>
 </template>
@@ -23,7 +23,7 @@
     import { defineComponent, computed, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
     import { useStore } from 'vuex';
-    import { PostProps, ImageProps } from '../store'
+    import { PostProps, ImageProps, UserProps } from '../store'
     import MarkdownIt from 'markdown-it';
 
     // 组件
@@ -68,10 +68,24 @@
                 }
             });
 
+            // 编辑删除权限
+            const showEditArea = computed(() => {
+                const { isLogin, _id } = store.state.user;
+                // 首先判断存在
+                if( currentPost.value && currentPost.value.author && isLogin) {
+                    // 类型断言为唯一一种
+                    const postAuthor = currentPost.value.author as UserProps;
+                    return postAuthor._id === _id;
+                } else {
+                    return false;
+                }
+            })
+
             return {
                 currentHTML,
                 currentPost,
-                currentImgUrl
+                currentImgUrl,
+                showEditArea
             }
         }
     })

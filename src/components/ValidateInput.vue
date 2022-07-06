@@ -5,8 +5,7 @@
             v-bind="$attrs"
             class="form-control" 
             :class="{'is-invalid': inputRef.error}"
-            :value="inputRef.val"
-            @input="updateValue"
+            v-model="inputRef.val"
             @blur="validateInput"
         >
         <textarea
@@ -14,8 +13,7 @@
             v-bind="$attrs"
             class="form-control" 
             :class="{'is-invalid': inputRef.error}"
-            :value="inputRef.val"
-            @input="updateValue"
+            v-model="inputRef.val"
             @blur="validateInput"
         ></textarea>
         <span v-if="inputRef.error" class="invalid-feedback">
@@ -25,7 +23,7 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, PropType, reactive, onMounted, watchEffect } from 'vue';
+    import { defineComponent, PropType, reactive, onMounted, watchEffect, watch, computed } from 'vue';
     import { emitter } from './ValidateForm.vue';
 
     interface RuleProp {
@@ -58,16 +56,26 @@
         inheritAttrs: false,
         setup(props, context) {
             const inputRef = reactive({
-                val: props.modelValue || '',
+                val: computed({
+                    get: () => props.modelValue || '',
+                    set: val => {
+                        context.emit('update:modelValue', val);
+                    }
+                }),
                 error: false,
                 message: ''
             })
+
+            // watch(() => props.modelValue, (newValue) => {
+            //     inputRef.val = newValue || ''
+            // })
+
             // 实现组件数据双向绑定：使得能够在父组件中直接 v-model
-            const updateValue = (e: Event) => {
-                const targetValue = (e.target as HTMLInputElement).value;
-                inputRef.val = targetValue;
-                context.emit('update:modelValue', targetValue);
-            }
+            // const updateValue = (e: Event) => {
+            //     const targetValue = (e.target as HTMLInputElement).value;
+            //     inputRef.val = targetValue;
+            //     context.emit('update:modelValue', targetValue);
+            // }
             const validateInput = () => {
                 if(props.rules) {
                     // 数组的 every 方法需要每一个都为真才返回真
@@ -112,7 +120,7 @@
             return {
                 inputRef,
                 validateInput,
-                updateValue
+                // updateValue
             }
         }
     })

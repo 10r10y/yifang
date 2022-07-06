@@ -3,8 +3,8 @@
         <div class="d-flex align-items-center">
             <img :src="fitUrl" :alt="author.nickName" class="rounded-circle img-thumbnail">
             <div class="detail ml-4 block">
-                <h5 class="d-block mb-0">{{author.nickName}}</h5>
-                <span class="text-truncate text-muted d-block">{{author.description}}</span>
+                <h5 class="mb-0">{{author.nickName}}</h5>
+                <span class="text-truncate text-muted">{{author.description}}</span>
             </div>
         </div>
     </div>
@@ -41,6 +41,5 @@
     .user-profile-component {
         width: 50px;
         height: 50px;
-        
     }
 </style>

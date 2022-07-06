@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref, PropType } from 'vue';
+    import { defineComponent, ref, PropType, watch } from 'vue';
     import axios from 'axios';
 
 
@@ -40,6 +40,10 @@
             },
             beforeUpload: {
                 type: Function as PropType<CheckFunction>
+            },
+            // 是否已经上传成功（用于编辑页面）
+            uploaded: {
+                type: Object
             }
         },
 
@@ -49,8 +53,15 @@
         emits: ['file-uploaded','file-uploaded-error'],
 
         setup(props, context){
-            const uploadedData = ref();
-            const fileStatus = ref<UploadStatus>('ready');
+            // 初始化时判断是创建页面还是编辑页面
+            const uploadedData = ref(props.uploaded);
+            const fileStatus = ref<UploadStatus>(props.uploaded ? 'success' : 'ready');
+            watch(() => props.uploaded, (newValue) => {
+                if(newValue) {
+                    fileStatus.value = 'success';
+                    uploadedData.value = newValue;
+                }
+            })
 
             // 一个隐藏起来的 input-file
             const fileInput = ref<null | HTMLInputElement>(null);

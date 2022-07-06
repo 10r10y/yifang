@@ -1,5 +1,5 @@
 import { Commit, createStore } from 'vuex';
-import axios from 'axios';
+import axios , { AxiosRequestConfig } from 'axios';
 
 export interface UserProps {
     isLogin: boolean;
@@ -53,15 +53,9 @@ export interface ResponseType<P = Record<string, unknown>> {     // 为 data 设
     data: P;
 }
 
-const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
-    const { data } = await axios.get(url);
-    commit (mutationName, data);
-    return data;
-}
-
-const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
-    const { data } = await axios.post(url, payload);
-    commit (mutationName, data);
+const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, config: AxiosRequestConfig = { method: 'get'}) => {
+    const { data } = await axios(url, config);
+    commit(mutationName, data);
     return data;
 }
 
@@ -78,27 +72,33 @@ const store = createStore<GlobalDataProps>({
     actions: {
         // 获取专栏列表
         fetchColumns({ commit }) {
-            return getAndCommit('/columns', 'fetchColumns', commit);
+            return asyncAndCommit('/columns', 'fetchColumns', commit);
         },
         // 获取专栏内部信息
         fetchColumn({ commit }, cid) { 
-            return getAndCommit(`/columns/${cid}`, 'fetchColumn', commit);
+            return asyncAndCommit(`/columns/${cid}`, 'fetchColumn', commit);
         },
         // 获取专栏文章列表文章
         fetchPosts({ commit }, id) { 
-            return getAndCommit(`/columns/${id}/posts`, 'fetchPosts', commit);
+            return asyncAndCommit(`/columns/${id}/posts`, 'fetchPosts', commit);
         },
         // 获取文章内部信息
-        fetchPost({ commit }, cid) {
-            return getAndCommit(`/posts/${cid}`, 'fetchPost', commit);
+        fetchPost({ commit }, id) {
+            return asyncAndCommit(`/posts/${id}`, 'fetchPost', commit);
         },
-
+        // 更新文章内容
+        updatePost({ commit }, { id, payload}) {
+            return asyncAndCommit(`/posts/${id}`, 'updatePost', commit, {
+                method: 'patch',
+                data: payload
+            })
+        },
         login({ commit }, payload) {
-            return postAndCommit('/user/login', 'login', commit, payload);
+            return asyncAndCommit('/user/login', 'login', commit, { method: 'post', data: payload});
         },
         // 获取当前用户信息
         fetchCurrentUser({ commit }) {
-            return getAndCommit('/user/current', 'fetchCurrentUser', commit);
+            return asyncAndCommit('/user/current', 'fetchCurrentUser', commit);
         },
 
         // 组合 action：登录成功后获取用户信息
@@ -110,7 +110,7 @@ const store = createStore<GlobalDataProps>({
 
         // 创建文章
         createPost({ commit }, payload) {
-            return postAndCommit('/posts', 'createPost', commit, payload);
+            return asyncAndCommit('/posts', 'createPost', commit, { method: 'post', data: payload});
         },
     },
     mutations: {
@@ -142,6 +142,15 @@ const store = createStore<GlobalDataProps>({
         },
         fetchPost(state, rawData) {
             state.posts = [rawData.data]
+        },
+        updatePost(state, data) {
+            state.posts = state.posts.map(post => {
+                if(post._id === data._id) {
+                    return data;
+                } else {
+                    return post;
+                }
+            })
         },
         setLoading(state, status) {
             state.loading = status

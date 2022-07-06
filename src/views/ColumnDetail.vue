@@ -18,7 +18,7 @@
     import { useRoute } from 'vue-router';  // 获取路由信息钩子
     import store, { ColumnProps } from '../store';
     import PostList from '../components/PostList.vue';
-    import { generateFitUrl } from '../hooks/useHandleImg';
+    import { addColumnAvatar } from '../hooks/useHandleImg';
     
 
     export default defineComponent({
@@ -38,7 +38,7 @@
             const column = computed(() => {
                 const selectColumn = store.getters.getColumnById(currentId) as ColumnProps | undefined;
                 if (selectColumn) {
-                    generateFitUrl(selectColumn, 100, 100);
+                    addColumnAvatar(selectColumn, 100, 100);
                 }
                 return selectColumn;
             });

@@ -1,8 +1,10 @@
 <template>
     <div class="create-post-page">
-        <h4>新建文章</h4>
+        <h4>{{isEditMode ? '编辑文章' : '新建文章'}}</h4>
         <Uploader 
-            action="/upload" :beforeUpload="uploadChecker"
+            action="/upload" 
+            :uploaded="uploadedData"
+            :beforeUpload="uploadChecker"
             @file-uploaded="handleFileUploaded"
             class="file-upload-container d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
         >
@@ -44,15 +46,15 @@
                 ></ValidateInput>
             </template>
             <template #submit>
-                <button type="submit" class="btn btn-primary">创建</button>
+                <button type="submit" class="btn btn-primary">{{isEditMode ? '更新文章' : '发表文章'}}</button>
             </template>
         </ValidateForm>
     </div>
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref } from 'vue';
-    import { useRouter } from 'vue-router';
+    import { defineComponent, ref, onMounted } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
     import { useStore } from 'vuex';
 
     import ValidateForm from '../components/ValidateForm.vue';
@@ -72,6 +74,7 @@
             Uploader
         },
         setup() {
+            const uploadedData = ref();
             const titleVal = ref('');
             const contentVal = ref('');
             let imageId = '';
@@ -82,8 +85,27 @@
                 { type: 'required', message: '文章详情不为空' }
             ];
 
+            const route = useRoute();
             const router = useRouter();
             const store = useStore<GlobalDataProps>();
+
+            // 判断是否为编辑模式(只有编辑页点进来才会带文章 id)
+            const isEditMode = !!route.query.id;
+
+            onMounted(() => {
+                // 编辑模式发送异步请求获取填充内容
+                if(isEditMode) {
+                    store.dispatch('fetchPost', route.query.id).then((rawData: ResponseType<PostProps>) => {
+                        const currentPost = rawData.data;
+                        if(currentPost.image) {
+                            uploadedData.value = { data: currentPost.image};
+                        }
+                        titleVal.value = currentPost.title;
+                        contentVal.value = currentPost.content || '';
+                    });
+
+                }
+            })
 
             const handleFileUploaded = (rawData: ResponseType<ImageProps>) => {
                 if(rawData.data._id) {
@@ -103,8 +125,14 @@
                         if(imageId) {
                             newPost.image = imageId;
                         }
-                        store.dispatch('createPost', newPost).then(() => {
-                            createMessage('发表成功，2 秒后跳转到文章', 'success', 2000);
+                        const actionName = isEditMode ? 'updatePost' : 'createPost';
+                        const sendData = isEditMode ? {
+                            id: route.query.id,
+                            payload: newPost
+                        } : newPost;
+
+                        store.dispatch(actionName, sendData).then(() => {
+                            createMessage(isEditMode ? '更新成功，2 秒后跳转到专栏' : '发表成功，2 秒后跳转到专栏', 'success', 2000);
                             setTimeout(() => {
                                 router.push({ name: 'column', params: { id: column }})
                             }, 2000);
@@ -134,6 +162,8 @@
                 contentVal,
                 titleRules,
                 contentRules,
+                uploadedData,
+                isEditMode,
                 onFormSubmit,
                 uploadChecker,
                 handleFileUploaded
