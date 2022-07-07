@@ -42,6 +42,15 @@ interface ListProps<P> {
     [id: string]: P;
 }
 
+// 改变数据结构使得 Posts 能够缓存
+export interface GlobalPostsProps {
+    data: ListProps<PostProps>;
+    loadedColumns: ListProps<{
+        total?: number;
+        currentPage?: number;
+    }>;
+}
+
 export interface GlobalErrorProps {
     status: boolean;
     message ?: string;
@@ -50,7 +59,8 @@ export interface GlobalDataProps {
     token: string;
     columns: {
         data: ListProps<ColumnProps>;
-        isLoaded: boolean
+        currentPage: number;
+        total: number;
     }
     posts: {
         data: ListProps<PostProps>;
@@ -84,7 +94,7 @@ const store = createStore<GlobalDataProps>({
     // 初始化数据
     state: {
         token: localStorage.getItem('token') || '',
-        columns: { data: {}, isLoaded: false},
+        columns: { data: {}, currentPage: 0, total: 0},
         posts: { data: {}, loadedColumns: []},
         user: { isLogin: false },
         loading: false,
@@ -92,9 +102,12 @@ const store = createStore<GlobalDataProps>({
     },
     actions: {
         // 获取专栏列表
-        fetchColumns({ state, commit }) {
-            if(!state.columns.isLoaded) {
-                return asyncAndCommit('/columns', 'fetchColumns', commit);
+        fetchColumns({ state, commit }, params = {}) {
+            // 从 params 中获取页数和每页展示数，默认值为 1 和 6
+            const { currentPage = 1, pageSize = 6} = params;
+            // 小于时发送
+            if(state.columns.currentPage < currentPage) {
+                return asyncAndCommit(`/columns?currentPage=${currentPage}&pageSize=${pageSize}`, 'fetchColumns', commit);
             }
         },
         // 获取专栏内部信息
@@ -170,8 +183,15 @@ const store = createStore<GlobalDataProps>({
             state.posts.data[newPost._id] = newPost;
         },
         fetchColumns(state, rawData) {
-            state.columns.data = arrToObj(rawData.data.list);
-            state.columns.isLoaded = true;
+            const { data } = state.columns;
+            const { list, count, currentPage } = rawData.data;
+            state.columns = {
+                data: { ...data, ...arrToObj(list)},
+                total: count,
+                currentPage: currentPage * 1
+            }
+            // state.columns.data = arrToObj(rawData.data.list);
+            // state.columns.isLoaded = true;
         },
         fetchColumn(state, rawData) {
             state.columns.data[rawData.data._id] = rawData.data;
