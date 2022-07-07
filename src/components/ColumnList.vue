@@ -36,9 +36,9 @@
                         column.avatar = {
                             url: require('@/assets/column.jpg')
                         }
-                    } else {    // 加载成功使用 阿里云OSS API 修改图片缩放比例
+                    } /* else {    // 加载成功使用 阿里云OSS API 修改图片缩放比例
                         column.avatar.url = column.avatar.url + '?x-oss-process=image/resize,m_pad,h_50,w_50'
-                    }
+                    } */
                     return column
                 })
             });

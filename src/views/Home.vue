@@ -32,6 +32,7 @@
     setup(){
         const store = useStore<GlobalDataProps>();
 
+        // 发送请求获取专栏列表
         onMounted(() => {
           store.dispatch('fetchColumns');
         })
