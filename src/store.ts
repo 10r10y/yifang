@@ -1,5 +1,7 @@
 import { Commit, createStore } from 'vuex';
 import axios , { AxiosRequestConfig } from 'axios';
+import arrToObj from './hooks/useArrayToObj';
+import objToArray from './hooks/useObjToArray';
 
 export interface UserProps {
     isLogin: boolean;
@@ -33,14 +35,21 @@ export interface PostProps {
     createdAt?: string;
     isHTML?: boolean;
 }
+
+// 扁平化后的 columns 和 posts 的泛型类型:
+// 将数组变为对象，类似 map ，以 id 为索引， 原本对象为值
+interface ListProps<P> {
+    [id: string]: P;
+}
+
 export interface GlobalErrorProps {
     status: boolean;
     message ?: string;
 }
 export interface GlobalDataProps {
     token: string;
-    columns: ColumnProps[];
-    posts: PostProps[];
+    columns: ListProps<ColumnProps>;
+    posts: ListProps<PostProps>;
     user: UserProps;
     loading: boolean;
     error: GlobalErrorProps;
@@ -63,8 +72,8 @@ const store = createStore<GlobalDataProps>({
     // 初始化数据
     state: {
         token: localStorage.getItem('token') || '',
-        columns: [],
-        posts: [],
+        columns: {},
+        posts: {},
         user: { isLogin: false },
         loading: false,
         error: { status: false}
@@ -92,6 +101,10 @@ const store = createStore<GlobalDataProps>({
                 method: 'patch',
                 data: payload
             })
+        },
+        // 删除文章
+        deletePost({ commit }, id) {
+            return asyncAndCommit(`/posts/${id}`, 'deletePost', commit, { method: 'delete' })
         },
         login({ commit }, payload) {
             return asyncAndCommit('/user/login', 'login', commit, { method: 'post', data: payload});
@@ -129,28 +142,33 @@ const store = createStore<GlobalDataProps>({
             delete axios.defaults.headers.common.Authorization;
         },
         createPost(state, newPost) {
-            state.posts.push(newPost);
+            // posts[]
+            state.posts[newPost._id] = newPost;
         },
         fetchColumns(state, rawData) {
-            state.columns = rawData.data.list;
+            state.columns = arrToObj(rawData.data.list);
         },
         fetchColumn(state, rawData) {
-            state.columns = [rawData.data];
+            state.columns[rawData.data._id] = rawData.data;
         },
         fetchPosts(state, rawData) {
-            state.posts = rawData.data.list
+            state.posts = arrToObj(rawData.data.list);
         },
         fetchPost(state, rawData) {
-            state.posts = [rawData.data]
+            state.posts[rawData.data._id] = rawData.data;
+        },
+        deletePost(state, { data }) {
+            delete state.posts[data._id];
         },
         updatePost(state, data) {
-            state.posts = state.posts.map(post => {
+            state.posts[data._id] = data;
+            /* state.posts = state.posts.map(post => {
                 if(post._id === data._id) {
                     return data;
                 } else {
                     return post;
                 }
-            })
+            }) */
         },
         setLoading(state, status) {
             state.loading = status
@@ -166,14 +184,17 @@ const store = createStore<GlobalDataProps>({
         }
     },
     getters: {
+        getColumns: (state) => {
+            return objToArray(state.columns);
+        },
         getColumnById:(state) => (id: string) => {
-            return state.columns.find(c => c._id === id);
+            return state.columns[id];
         },
         getPostsByCid:(state) => (cid: string) => {
-            return state.posts.filter(post => post.column === cid)
+            return objToArray(state.posts).filter(post => post.column === cid);
         },
         getPostById:(state) => (id: string) => {
-            return state.posts.find(p => p._id === id)
+            return state.posts[id];
         }
     }
     

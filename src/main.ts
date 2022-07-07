@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import axios from 'axios';
+import 'easymde/dist/easymde.min.css';
 
 axios.defaults.baseURL = "http://apis.imooc.com/api/";
 axios.interceptors.request.use(config => {
@@ -15,9 +16,6 @@ axios.interceptors.request.use(config => {
       config.data = { ...config.data, icode: '6E2125E81587AC9F' }
     }
     return config
-})
-axios.get("columns").then(resp => {
-    console.log(resp.data);
 })
 
 

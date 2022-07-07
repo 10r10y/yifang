@@ -1,4 +1,11 @@
 <template>
+    <Modal title="删除文章" 
+        :visible="modalIsVisible" 
+        @modal-on-close="modalIsVisible = false" 
+        @modal-on-confirm="deleteAndHide"
+    >
+        <p>确定要删除这篇文章吗？</p>
+    </Modal>
     <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
         <div class="img-show">
             <img :src="currentImgUrl" alt="currentImgUrl" class="rounded-lg img-fluid my-4" v-if="currentImgUrl">
@@ -14,31 +21,35 @@
         <div v-html="currentHTML"></div>
         <div v-if="showEditArea" class="btn-group mt-5">
             <router-link :to="`/create?id=${currentPost._id}`" type="button" class="btn btn-primary">编辑</router-link>
-            <button type="button" class="btn btn-danger">删除</button>
+            <button type="button" class="btn btn-danger" @click.prevent="modalIsVisible = true">删除</button>
         </div>
     </article>
 </template>
 
 <script lang="ts">
-    import { defineComponent, computed, onMounted } from 'vue';
-    import { useRoute } from 'vue-router';
+    import { defineComponent, computed, onMounted, ref } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
     import { useStore } from 'vuex';
-    import { PostProps, ImageProps, UserProps } from '../store'
-    import MarkdownIt from 'markdown-it';
+    import { PostProps, ImageProps, UserProps, ResponseType } from '../store'
+    import { marked } from 'marked';
 
     // 组件
     import AuthorProfile from '../components/AuthorProfile.vue';
-
+    import Modal from '../components/Modal.vue';
+    import createMessage from '../components/CreatMessage';
     
 
     export default defineComponent({
         name: 'PostDetail',
         components: {
-            AuthorProfile
+            AuthorProfile,
+            Modal
         },
         setup() {
             const store = useStore();
             const route = useRoute();
+            const router = useRouter();
+            const modalIsVisible = ref(false);
             const postId = route.params.id;
             
             onMounted(() => {
@@ -58,11 +69,10 @@
             })
             
             // md to html
-            const md = new MarkdownIt();
             const currentHTML = computed(() => {
                 const { content, isHTML } = currentPost.value;
                 if(currentPost.value && content) {
-                    return isHTML ? content : md.render(content);
+                    return isHTML ? content : marked.parse(content);
                 } else {
                     return '';
                 }
@@ -81,11 +91,24 @@
                 }
             })
 
+            // 删除
+            const deleteAndHide = () => {
+                modalIsVisible.value = false;
+                store.dispatch('deletePost', postId).then((rawData: ResponseType<PostProps>) => {
+                    createMessage('删除成功，2秒后跳转专栏首页', 'success', 2000);
+                    setTimeout(()=>{
+                        router.push(`/column/${rawData.data.column}`)
+                    }, 2000);
+                })
+            }
+
             return {
                 currentHTML,
                 currentPost,
                 currentImgUrl,
-                showEditArea
+                showEditArea,
+                modalIsVisible,
+                deleteAndHide
             }
         }
     })

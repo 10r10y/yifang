@@ -36,14 +36,22 @@
                     type="text"
                 ></ValidateInput>
                 <label >文章详情：</label>
-                <ValidateInput
+                <!-- 传入 options 关闭拼写检查 -->
+                <Editor v-model="contentVal" 
+                    @blur="checkEditor"
+                    :options="editorOptions" 
+                    ref="editorRef"
+                    :class="{'is-invalid': !editorStatus.isValid}"
+                ></Editor>
+                <span v-if="!editorStatus.isValid" class="incalid-feedback mt-1">{{editorStatus.message}}</span>
+                <!-- <ValidateInput
                     tag="textarea"
                     rows="10"
                     placeholder="请输入文章详情"
                     :rules="contentRules"
                     v-model="contentVal"
                     type="textarea"
-                ></ValidateInput>
+                ></ValidateInput> -->
             </template>
             <template #submit>
                 <button type="submit" class="btn btn-primary">{{isEditMode ? '更新文章' : '发表文章'}}</button>
@@ -53,17 +61,22 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref, onMounted } from 'vue';
+    import { defineComponent, ref, onMounted, reactive } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { useStore } from 'vuex';
+    import EasyMDE, { Options } from 'easymde';
 
     import ValidateForm from '../components/ValidateForm.vue';
     import ValidateInput, { RulesProp } from '../components/ValidateInput.vue';
     import Uploader from '../components/Uploader.vue';
     import createMessage from '../components/CreatMessage';
-    import { GlobalDataProps, PostProps, ResponseType, ImageProps } from '../store';
-    // 引入检查函数
+    import Editor from '../components/Editor.vue';
     import beforeUploadCheck from '../hooks/useUploadCheck'
+    import { GlobalDataProps, PostProps, ResponseType, ImageProps } from '../store';
+
+    interface EditorInstance {
+        getMDEInstance: () => EasyMDE | null;
+    }
 
 
     export default defineComponent({
@@ -71,7 +84,8 @@
         components: {
             ValidateForm,
             ValidateInput,
-            Uploader
+            Uploader,
+            Editor
         },
         setup() {
             const uploadedData = ref();
@@ -88,11 +102,35 @@
             const route = useRoute();
             const router = useRouter();
             const store = useStore<GlobalDataProps>();
+            const textArea = ref<undefined | HTMLElement>(undefined);
+            const editorOptions: Options = {
+                spellChecker: false
+            }
+            const editorRef = ref<null | EditorInstance>();
+            const editorStatus = reactive({
+                isValid: true,
+                message: ''
+            })
 
             // 判断是否为编辑模式(只有编辑页点进来才会带文章 id)
             const isEditMode = !!route.query.id;
 
+            // 对输入进行检查
+            const checkEditor = () => {
+                if(contentVal.value.trim() === ''){
+                    editorStatus.isValid = false;
+                    editorStatus.message = '文章详情不能为空'
+                } else {
+                    editorStatus.isValid = true;
+                    editorStatus.message = ''
+                }
+            }
+
             onMounted(() => {
+                if(editorRef.value) {
+                    // 尝试拿到 editor 暴露的实例
+                    console.log(editorRef.value.getMDEInstance())
+                }
                 // 编辑模式发送异步请求获取填充内容
                 if(isEditMode) {
                     store.dispatch('fetchPost', route.query.id).then((rawData: ResponseType<PostProps>) => {
@@ -103,7 +141,6 @@
                         titleVal.value = currentPost.title;
                         contentVal.value = currentPost.content || '';
                     });
-
                 }
             })
 
@@ -113,7 +150,8 @@
                 }
             }
             const onFormSubmit = (result: boolean) => {
-                if(result){
+                checkEditor();
+                if(result && editorStatus.isValid){
                     const { column, _id } = store.state.user;
                     if(column){
                         const newPost: PostProps = {
@@ -164,9 +202,14 @@
                 contentRules,
                 uploadedData,
                 isEditMode,
+                textArea,
+                editorOptions,
+                editorRef,
+                editorStatus,
                 onFormSubmit,
                 uploadChecker,
-                handleFileUploaded
+                handleFileUploaded,
+                checkEditor
             }
         }
     })
@@ -183,4 +226,9 @@
         height: 100%;
         object-fit: cover;
     }
+
+    .vue-easymde-editor.is-invalid {
+        border: 1px solid #dc3545;
+    }
+
 </style>

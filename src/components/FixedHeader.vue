@@ -12,6 +12,7 @@
             <li class="list-inline-item">
                 <Dropdown :title="`你好 ${user.nickName}`">
                     <DropdownItem><router-link to="/create" class="dropdown-item">新建文章</router-link></DropdownItem>
+                    <DropdownItem><router-link :to="`/column/${user.column}`" class="dropdown-item">我的专栏</router-link></DropdownItem>
                     <DropdownItem disabled><a href="#" class="dropdown-item">编辑资料</a></DropdownItem>
                     <DropdownItem><router-link to="/" @click="logOut" class="dropdown-item">退出登陆</router-link></DropdownItem>
                 </Dropdown>

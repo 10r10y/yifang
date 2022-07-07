@@ -50,7 +50,7 @@
           createMessage(`上传图片ID：${rawData.data._id}`, 'success', 2000);
         };
 
-        const list = computed(() => store.state.columns);
+        const list = computed(() => store.getters.getColumns);
         return {
             list,
             beforeUpload,
