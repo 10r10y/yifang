@@ -30,7 +30,6 @@
     import { GlobalDataProps, ResponseType } from '../store';
     import createMessage from '../components/CreatMessage';
     import useLoadMorePage from '../hooks/useLoadMorePage';
-import { stringTypeAnnotation } from '@babel/types';
 
     export default defineComponent({
     name: 'App',
@@ -49,7 +48,7 @@ import { stringTypeAnnotation } from '@babel/types';
         })
 
         const list = computed(() => store.getters.getColumns);
-        const { loadMorePage, isLastPage } = useLoadMorePage('fetchColumns', total, {pageSize: 3, currentPage: (currentPage.value ? currentPage.value + 1 : 2)});
+        const { loadMorePage, isLastPage } = useLoadMorePage('fetchColumns', total, {currentPage: (currentPage.value ? currentPage.value + 1 : 2), pageSize: 3});
 
         return {
             list,

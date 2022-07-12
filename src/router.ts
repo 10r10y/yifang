@@ -8,6 +8,9 @@ import store from './store';
 import SignIn from './views/SignIn.vue';
 import axios from 'axios';
 import PostDetail from './views/PostDetail.vue';
+import EditInformation from './views/EditInformation.vue';
+import EditUser from './components/EditUser.vue';
+import EditColumn from './components/EditColumn.vue'
 
 const routerHistory = createWebHistory();
 
@@ -56,6 +59,25 @@ const router = createRouter({
             component: CreatePost,
             meta: {
                 requiredLogin: true
+            }
+        },
+        // 编辑资料
+        {
+            path:'/edit',
+            name:'edit',
+            component: EditInformation,
+            children:[
+                {
+                    path:'user',
+                    component: EditUser
+                },
+                {
+                    path:'column',
+                    component: EditColumn
+                }
+            ],
+            meta: {
+
             }
         }
     ]

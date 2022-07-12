@@ -2,18 +2,23 @@ import { useStore } from 'vuex';
 import { ref, computed, ComputedRef} from 'vue';
 
 interface LoadParams {
-    currentPage: number;
-    pageSize: number;
+    currentPage?: number;
+    pageSize?: number;
+    [key: string]: any;
 }
 const useLoadMorePage = (actionName: string, total: ComputedRef<number>, 
-    params: LoadParams = { currentPage: 2, pageSize: 5}) => {
+    params: LoadParams = {}) => {
         const store = useStore();
-        const currentPage = ref(params.currentPage);
+        const currentPage = ref(params.currentPage || 1);
+        const pageSize = ref(params.pageSize || 5);
         // 发送请求时需要的对象
-        const requestParams = computed(() => ({
-            currentPage: currentPage.value,
-            pageSize:params.pageSize
-        }))
+        const requestParams = computed(() => {
+            return {
+                ...params,
+                currentPage: currentPage.value + 1
+            }
+            
+        })
         // 暴露方法
         // 1.请求更多页
         const loadMorePage = () => {
@@ -23,7 +28,7 @@ const useLoadMorePage = (actionName: string, total: ComputedRef<number>,
         }
         // 2.是否到底
         const isLastPage = computed(() => {
-            return Math.ceil(total.value / params.pageSize) < currentPage.value;
+            return Math.ceil(total.value / pageSize.value) < currentPage.value;
         })
 
         return  {

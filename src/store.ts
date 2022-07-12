@@ -42,15 +42,6 @@ interface ListProps<P> {
     [id: string]: P;
 }
 
-// 改变数据结构使得 Posts 能够缓存
-export interface GlobalPostsProps {
-    data: ListProps<PostProps>;
-    loadedColumns: ListProps<{
-        total?: number;
-        currentPage?: number;
-    }>;
-}
-
 export interface GlobalErrorProps {
     status: boolean;
     message ?: string;
@@ -64,7 +55,10 @@ export interface GlobalDataProps {
     }
     posts: {
         data: ListProps<PostProps>;
-        loadedColumns: string[];
+        loadedColumns: ListProps<{
+            total?: number;
+            currentPage?: number;
+        }>;
     }
     user: UserProps;
     loading: boolean;
@@ -95,7 +89,7 @@ const store = createStore<GlobalDataProps>({
     state: {
         token: localStorage.getItem('token') || '',
         columns: { data: {}, currentPage: 0, total: 0},
-        posts: { data: {}, loadedColumns: []},
+        posts: { data: {}, loadedColumns: {}},
         user: { isLogin: false },
         loading: false,
         error: { status: false}
@@ -117,10 +111,17 @@ const store = createStore<GlobalDataProps>({
             }
         },
         // 获取专栏文章列表文章
-        fetchPosts({ state, commit }, id) { 
-            if(!state.posts.loadedColumns.includes(id)){
-                return asyncAndCommit(`/columns/${id}/posts`, 'fetchPosts', commit, { method: 'get'}, id);
+        fetchPosts({ state, commit }, params = {}) { 
+            const { cid, currentPage = 1, pageSize = 2 } = params;
+            const { loadedColumns } = state.posts;
+            const loadedCurrentPage = (loadedColumns[cid] && loadedColumns[cid].currentPage) || 0;
+            if(!Object.keys(loadedColumns).includes(cid) || loadedCurrentPage < currentPage) {
+                return asyncAndCommit(`/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`,
+                'fetchPosts', commit, { method: 'get' }, cid);
             }
+            // if(!state.posts.loadedColumns.includes(id)){
+            //     return asyncAndCommit(`/columns/${id}/posts`, 'fetchPosts', commit, { method: 'get'}, id);
+            // }
         },
         // 获取文章内部信息
         fetchPost({ state, commit }, id) {
@@ -150,7 +151,10 @@ const store = createStore<GlobalDataProps>({
         fetchCurrentUser({ commit }) {
             return asyncAndCommit('/user/current', 'fetchCurrentUser', commit);
         },
-
+        // 更新用户信息
+        updateUser({ commit }, { id, payload }) {
+            return asyncAndCommit(`/user/${id}`, 'updateUser', commit, { method:'patch', data: payload});
+        },
         // 组合 action：登录成功后获取用户信息
         loginAndFetch({dispatch}, loginData) {
             return dispatch('login', loginData).then(()=> {
@@ -196,9 +200,15 @@ const store = createStore<GlobalDataProps>({
         fetchColumn(state, rawData) {
             state.columns.data[rawData.data._id] = rawData.data;
         },
-        fetchPosts(state, {data: rawData, extraData: columnId}) { // 解构赋值同时使用别名
-            state.posts.data = { ...state.posts.data, ...arrToObj(rawData.data.list)};
-            state.posts.loadedColumns.push(columnId);
+        fetchPosts(state, {data: rawData, extraData}) { // 解构赋值同时使用别名
+            const { data, loadedColumns } = state.posts;
+            const { list, count, currentPage } = rawData.data;
+            const listData = list as PostProps[];
+            state.posts.data = { ...data, ...arrToObj(listData)};
+            loadedColumns[extraData] = {
+                total: count,
+                currentPage
+            }
         },
         fetchPost(state, rawData) {
             state.posts.data[rawData.data._id] = rawData.data;
@@ -225,6 +235,9 @@ const store = createStore<GlobalDataProps>({
                 ...rawData.data,
             }
         },
+        updateUser(state, rawData) {
+            state.user = rawData.data
+        },
         setError(state, e: GlobalErrorProps) {
             state.error = e;
         }
@@ -241,6 +254,18 @@ const store = createStore<GlobalDataProps>({
         },
         getPostById:(state) => (id: string) => {
             return state.posts.data[id];
+        },
+        getPostsTotalByCid:(state) => (cid: string) => {
+            if(state.posts.loadedColumns[cid])
+                return state.posts.loadedColumns[cid].total;
+            else
+                return 0;
+        },
+        getPostsCurrentPageByCid:(state) => (cid: string) => {
+            if(state.posts.loadedColumns[cid])
+                return state.posts.loadedColumns[cid];
+            else
+                return 0;
         }
     }
     
