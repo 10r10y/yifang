@@ -13,7 +13,7 @@
                 <Dropdown :title="`你好 ${user.nickName}`">
                     <DropdownItem><router-link to="/create" class="dropdown-item">新建文章</router-link></DropdownItem>
                     <DropdownItem><router-link :to="`/column/${user.column}`" class="dropdown-item">我的专栏</router-link></DropdownItem>
-                    <DropdownItem><router-link to="/edit" class="dropdown-item">编辑资料</router-link></DropdownItem>
+                    <DropdownItem><router-link to="/edit/user" class="dropdown-item">编辑资料</router-link></DropdownItem>
                     <DropdownItem><router-link to="/" @click="logOut" class="dropdown-item">退出登陆</router-link></DropdownItem>
                 </Dropdown>
             </li>
