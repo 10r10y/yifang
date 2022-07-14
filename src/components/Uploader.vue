@@ -4,6 +4,7 @@
             <slot v-if="fileStatus === 'ready'" name="default">
                 <button class="btn btn-primary">点击上传</button>
             </slot>
+            <!-- 上传成功后通过自定义属性拿到值 -->
             <slot v-else-if="fileStatus === 'success'" name="uploaded" :uploadedData="uploadedData">
                 <button class="btn btn-primary">上传成功</button>
             </slot>
@@ -54,8 +55,9 @@
         emits: ['file-uploaded','file-uploaded-error'],
 
         setup(props, context){
-            // 初始化时判断是创建页面还是编辑页面
+            // 接收通过 props 传入的 uploadedData，并在上传成功插槽中传回
             const uploadedData = ref(props.uploaded);
+            // 初始化时判断是创建页面还是编辑页面
             const fileStatus = ref<UploadStatus>(props.uploaded ? 'success' : 'ready');
             watch(() => props.uploaded, (newValue) => {
                 if(newValue) {

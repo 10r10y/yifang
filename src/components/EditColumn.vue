@@ -4,7 +4,7 @@
         action="/upload"
         class="d-flex align-items-center justify-content-center bg-light text-secondary circle mx-auto my-3"
         :beforeUpload="beforeUpload"
-        :uploaded="uploadData"
+        :uploaded="uploadedData"
         @file-uploaded="onFileUploaded"
     >
         <template #default>
@@ -12,8 +12,8 @@
                 
             </div>
         </template>
-        <template #uploaded>
-            <img :src="uploadData.data + '?x-oss-process=image/resize,m_fill,h_200,w_200'">
+        <template #uploaded="dataProps">
+            <img :src="dataProps.uploadedData.data.url + '?x-oss-process=image/resize,m_fill,h_200,w_200'">
         </template>
     </Uploader>
     <ValidateForm @form-submit="onFormSubmit">
@@ -58,7 +58,7 @@
             const columnId = computed(()=> userData.value.column);
 
             const columnData = computed(() => store.getters.getColumnById(columnId.value));
-            const uploadData = ref();
+            const uploadedData = ref();
             const columnTitle = ref();
             const columnDescription = ref();
 
@@ -70,6 +70,10 @@
                         const newData = store.getters.getColumnById(columnId.value);
                         columnTitle.value = newData.title;
                         columnDescription.value = newData.description;
+                        if(columnData.value && columnData.value.avatar){
+                            const { avatar } = columnData.value;
+                            uploadedData.value = { data: avatar}
+                        }
                     })
                 }
             })
@@ -77,7 +81,7 @@
             watch(columnData, () => {
                 if(columnData.value && columnData.value.avatar){
                     const { avatar } = columnData.value;
-                    uploadData.value = { data: avatar.url}
+                    uploadedData.value = { data: avatar.url}
                 }
             })
         
@@ -135,7 +139,7 @@
             return {
                 columnTitle,
                 columnDescription,
-                uploadData,
+                uploadedData,
                 beforeUpload,
                 onFileUploaded,
                 onFormSubmit

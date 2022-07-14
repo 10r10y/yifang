@@ -2,8 +2,8 @@
     <h2>编辑个人资料</h2>
     <Uploader
         action="/upload"
-        class="d-flex align-items-center justify-content-center bg-light text-secondary circle mx-auto my-3"
-        :uploaded="uploadData"
+        class="d-flex  justify-content-center my-3"
+        :uploaded="uploadedData"
         @file-uploaded="onFileUploaded"
     >
         <template #default>
@@ -11,8 +11,8 @@
                 
             </div>
         </template>
-        <template #uploaded>
-            <img :src="uploadData.data + '?x-oss-process=image/resize,m_fill,h_200,w_200'">
+        <template #uploaded="dataProps">
+            <img :src="dataProps.uploadedData.data.url + '?x-oss-process=image/resize,m_fill,h_200,w_200'">
         </template>
     </Uploader>
     <ValidateForm @form-submit="onFormSubmit">
@@ -49,9 +49,9 @@ import router from '@/router';
             const userData = computed(() => store.state.user);
             const nickName = ref(userData.value.nickName);
             const description = ref(userData.value.description);
-            const uploadData = ref();
+            const uploadedData = ref();
             if(userData.value && userData.value.avatar){
-                uploadData.value = { data: userData.value.avatar.url };
+                uploadedData.value = { data: userData.value.avatar };
             }
             
             const imgId = ref('');
@@ -88,7 +88,7 @@ import router from '@/router';
             return {
                 nickName,
                 description,
-                uploadData,
+                uploadedData,
                 onFileUploaded,
                 onFormSubmit
             }
