@@ -24,7 +24,3 @@ main.ts
 store.ts
 router.ts
 ```
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-# yifang
-
