@@ -1,4 +1,4 @@
-# yifang 一方知识库
+# yifang
 
 ## Project structure
 ```
@@ -23,31 +23,8 @@ App.vue
 main.ts
 store.ts
 router.ts
-...
-
 ```
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 # yifang
-一方知识库
+
