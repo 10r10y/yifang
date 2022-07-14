@@ -50,6 +50,7 @@
         // 不希望组件的根元素继承其它特性，结合 $attrs 使用
         inheritAttrs: false,
 
+        // 自定义事件
         emits: ['file-uploaded','file-uploaded-error'],
 
         setup(props, context){

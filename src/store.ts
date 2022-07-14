@@ -65,7 +65,7 @@ export interface GlobalDataProps {
     error: GlobalErrorProps;
 }
 
-// 响应信息接口
+// 响应信息接口（上传文件接收的数据类型）
 export interface ResponseType<P = Record<string, unknown>> {     // 为 data 设置泛型，默认值为空对象
     code: number;
     msg: string;
@@ -122,6 +122,13 @@ const store = createStore<GlobalDataProps>({
             // if(!state.posts.loadedColumns.includes(id)){
             //     return asyncAndCommit(`/columns/${id}/posts`, 'fetchPosts', commit, { method: 'get'}, id);
             // }
+        },
+        // 更新专栏信息
+        updateColumn({ commit }, { id, payload}) {
+            return asyncAndCommit(`columns/${id}`, 'updateColumn', commit, {
+                method: 'patch',
+                data: payload
+            });
         },
         // 获取文章内部信息
         fetchPost({ state, commit }, id) {
@@ -199,6 +206,9 @@ const store = createStore<GlobalDataProps>({
         },
         fetchColumn(state, rawData) {
             state.columns.data[rawData.data._id] = rawData.data;
+        },
+        updateColumn(state, data) {
+            state.columns.data[data._id] = data;
         },
         fetchPosts(state, {data: rawData, extraData}) { // 解构赋值同时使用别名
             const { data, loadedColumns } = state.posts;
