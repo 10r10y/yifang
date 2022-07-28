@@ -119,8 +119,7 @@
 
             return {
                 inputRef,
-                validateInput,
-                // updateValue
+                validateInput
             }
         }
     })

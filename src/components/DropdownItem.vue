@@ -1,11 +1,12 @@
 <template>
-    <li class="dropdown-option" :class="{'is-disabled': disabled }">
+    <li class="dropdown-option" :class="{'is-disabled': disabled }" @click="handleItemClick">
         <slot></slot>
     </li>
 </template>
 
 <script lang="ts">
     import { defineComponent } from 'vue';
+    import { emitter } from './Dropdown.vue';
 
     export default defineComponent({
         name: 'DropdownItem',
@@ -14,7 +15,17 @@
                 type: Boolean,
                 default: false
             }
+        },
+        setup() {
+            const handleItemClick = () => {
+                emitter.emit('dropdown-item-clicked');
+            };
+
+            return {
+                handleItemClick
+            }
         }
+        
     })
 </script>
 

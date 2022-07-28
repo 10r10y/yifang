@@ -127,10 +127,11 @@
             }
 
             onMounted(() => {
-                if(editorRef.value) {
-                    // 尝试拿到 editor 暴露的实例
-                    console.log(editorRef.value.getMDEInstance())
-                }
+                // 待调整
+                // if(editorRef.value) {
+                //     // 尝试拿到 editor 暴露的实例
+                //     console.log(editorRef.value.getMDEInstance())
+                // }
                 // 编辑模式发送异步请求获取填充内容
                 if(isEditMode) {
                     store.dispatch('fetchPost', route.query.id).then((rawData: ResponseType<PostProps>) => {

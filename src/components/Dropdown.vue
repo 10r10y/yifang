@@ -13,8 +13,12 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref, watch } from 'vue';
+    import { defineComponent, ref, watch, onUnmounted } from 'vue';
     import useClickOutside from '../hooks/useClickOutside';
+    import mitt from 'mitt';
+
+    // 注册并暴露 EventBus 让子组件能够触发自定义事件，继而父组件触发 callback 从而隐藏
+    export const emitter = mitt();
 
     export default defineComponent({
         name: 'Dropdown',
@@ -41,6 +45,18 @@
                 if(isClickOutside.value && isOpen.value){
                     isOpen.value = false;
                 }
+            });
+
+            // 实现点击 DropdownItme 跳转后隐藏 Dropdown
+            // callback
+            const dropdownItemClicked = () => {
+                toggleOpen();
+            };
+            // 创建自定义事件并挂载到 emitter 上
+            emitter.on('dropdown-item-clicked', dropdownItemClicked);
+            // 组件卸载后移除
+            onUnmounted(() => {
+                emitter.off('dropdown-item-clicked', dropdownItemClicked);
             });
 
             return {

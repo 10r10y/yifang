@@ -30,7 +30,6 @@ axios.interceptors.request.use(config => {
 // axios 响应拦截器：返回结果后
 axios.interceptors.response.use(response => {
   store.commit('setLoading', false);
-  
   return response;
 }, e => {    // 添加错误拦截
   const { error } = e.response.data;
