@@ -1,5 +1,4 @@
 <template>
-    <h2>更新专栏信息</h2>
     <Uploader
         action="/upload"
         class="d-flex align-items-center justify-content-center bg-light text-secondary circle mx-auto my-3"
@@ -8,9 +7,7 @@
         @file-uploaded="onFileUploaded"
     >
         <template #default>
-            <div class="defaultImg">
-                
-            </div>
+            <div class="defaultImg"></div>
         </template>
         <template #uploaded="dataProps">
             <img :src="dataProps.uploadedData.data.url + '?x-oss-process=image/resize,m_fill,h_200,w_200'">
@@ -27,13 +24,13 @@
         >请输入简介信息
         </ValidateInput>
         <template #submit>
-            <button class="btn btn-primary btn-large">提交修改</button>
+            <button class="btn btn-outline-primary btn-large d-block mx-auto mb-3">提交修改</button>
         </template>
     </ValidateForm>
 </template>
 
 <script lang="ts">
-    import { defineComponent, onMounted, computed, ref, watch, nextTick } from 'vue';
+    import { defineComponent, onMounted, computed, ref, watch} from 'vue';
     import { useStore } from 'vuex';
     import { useRouter } from 'vue-router'
     import { ResponseType, ImageProps} from '../store';
@@ -148,11 +145,20 @@
     })
 </script>
 
-<style scoped>
+<style>
     .defaultImg {
         width: 180px;
         height: 180px;
         border-radius: 50%;
         background-color: aquamarine;
+    }
+
+    .circle {
+        width: 200px;
+        height: 200px;
+        border-radius: 200px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 1px solid #efefef;
     }
 </style>    

@@ -1,7 +1,7 @@
 <template>
-    <div class="user-profile-component">
+    <div>
         <div class="d-flex align-items-center">
-            <img :src="fitUrl" :alt="author.nickName" class="rounded-circle img-thumbnail">
+            <img :src="fitUrl" :alt="author.nickName" class="rounded-circle img-thumbnail m-2">
             <div class="detail ml-4 block">
                 <h5 class="mb-0">{{author.nickName}}</h5>
                 <span class="text-truncate text-muted">{{author.description}}</span>
@@ -38,8 +38,5 @@
 </script>
 
 <style scoped>
-    .user-profile-component {
-        width: 50px;
-        height: 50px;
-    }
+
 </style>

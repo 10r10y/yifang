@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, PropType, reactive, onMounted, watchEffect, watch, computed } from 'vue';
+    import { defineComponent, PropType, reactive, onMounted, watchEffect, computed } from 'vue';
     import { emitter } from './ValidateForm.vue';
 
     interface RuleProp {

@@ -1,15 +1,12 @@
 <template>
-    <h2>编辑个人资料</h2>
     <Uploader
         action="/upload"
-        class="d-flex  justify-content-center my-3"
+        class="d-flex align-items-center justify-content-center bg-light text-secondary circle mx-auto my-3"
         :uploaded="uploadedData"
         @file-uploaded="onFileUploaded"
     >
         <template #default>
-            <div class="defaultImg">
-                
-            </div>
+            <div class="defaultImg"> </div>
         </template>
         <template #uploaded="dataProps">
             <img :src="dataProps.uploadedData.data.url + '?x-oss-process=image/resize,m_fill,h_200,w_200'">
@@ -19,7 +16,7 @@
         <ValidateInput placeholder="请输入名称" v-model="nickName"></ValidateInput>
         <ValidateInput tag="textarea" rows="6" v-model="description">请输入简介信息</ValidateInput>
         <template #submit>
-            <button class="btn btn-primary btn-large">提交修改</button>
+            <button class="btn btn-outline-primary btn-large d-block mx-auto mb-3">提交修改</button>
         </template>
     </ValidateForm>
 </template>
@@ -27,12 +24,12 @@
 <script lang="ts">
     import { defineComponent, computed, ref } from 'vue';
     import { useStore } from 'vuex';
+    import router from '@/router';
     import { ResponseType, ImageProps } from '../store';
     import Uploader from './Uploader.vue';
     import ValidateForm from './ValidateForm.vue';
     import ValidateInput from './ValidateInput.vue';
     import createMessage from './CreatMessage';
-import router from '@/router';
 
 
     export default defineComponent({
@@ -45,7 +42,6 @@ import router from '@/router';
         setup() {
             // 获取当前登录 user : 通过 user 获取 column
             const store = useStore();
-
             const userData = computed(() => store.state.user);
             const nickName = ref(userData.value.nickName);
             const description = ref(userData.value.description);
@@ -96,11 +92,20 @@ import router from '@/router';
     })
 </script>
 
-<style scoped>
+<style>
     .defaultImg {
         width: 180px;
         height: 180px;
         border-radius: 50%;
-        background-color: aquamarine;
+        background-color: rgb(51, 62, 59);
+    }
+
+    .circle {
+        width: 200px;
+        height: 200px;
+        border-radius: 200px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 1px solid #efefef;
     }
 </style>

@@ -1,6 +1,6 @@
 import { ImageProps, ColumnProps, UserProps } from "../store";
 
-export function generateFitUrl(data: ImageProps, width: number, height: number, format = ['m_pad']) {
+export function generateFitUrl(data: ImageProps, width: number, height: number, format = ['m_fill']) {
     if(data && data.url) {
         const formatStr = format.reduce((prev, current) => {
             return current + ',' + prev;

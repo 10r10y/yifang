@@ -54,7 +54,7 @@
                 ></ValidateInput> -->
             </template>
             <template #submit>
-                <button type="submit" class="btn btn-primary">{{isEditMode ? '更新文章' : '发表文章'}}</button>
+                <button type="submit" class="btn btn-primary d-block mx-auto w-25 mb-3">{{isEditMode ? '更新文章' : '发表文章'}}</button>
             </template>
         </ValidateForm>
     </div>
@@ -103,8 +103,11 @@
             const router = useRouter();
             const store = useStore<GlobalDataProps>();
             const textArea = ref<undefined | HTMLElement>(undefined);
+            // easyMDE 配置项
             const editorOptions: Options = {
-                spellChecker: false
+                spellChecker: false,
+                // 关闭图标 CDN 加载
+                // autoDownloadFontAwesome: false
             }
             const editorRef = ref<null | EditorInstance>();
             const editorStatus = reactive({

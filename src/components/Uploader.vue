@@ -1,5 +1,5 @@
 <template>
-    <div class="filr-upload">
+    <div class="file-upload">
         <div class="file-upload-container" @click="triggerUpload" v-bind="$attrs">
             <slot v-if="fileStatus === 'ready'" name="default">
                 <button class="btn btn-primary">点击上传</button>

@@ -1,9 +1,10 @@
 <template>
-    <div class="container">
-    <ValidateForm @form-submit="onFormSubmit">
+  <div class="mx-auto p-3 d-flex flex-column align-items-center mt-4" style="max-width: 330px">
+    <div class="pt-4"></div>
+    <ValidateForm @form-submit="onFormSubmit" class="border rounded p-3 w-100" style="background-color: #f6f8fa">
       <!-- 多个输入框插槽 -->
       <template #default>
-        <div class="mb-3">
+        <div class="mt-3">
           <label class="form-label">邮箱地址</label>
           <ValidateInput 
             :rules="emailRules"
@@ -26,7 +27,7 @@
       
       <!-- 按键插槽 -->
       <template #submit>
-        <button type="submit" class="btn btn-primary">登录</button>
+        <button type="submit" class="btn btn-success w-100">登录</button>
       </template>
       
     </ValidateForm>
@@ -52,7 +53,7 @@
         const router = useRouter();
         const store = useStore();
 
-        const inputRef = ref<any>();    // 获取子组件实例
+        // const inputRef = ref<any>();    // 获取子组件实例
         const emailVal = ref('');
         const passwordVal = ref('');
         // 邮箱验证
@@ -74,7 +75,7 @@
               email: emailVal.value,
               password: passwordVal.value
             }
-            store.dispatch('loginAndFetch', payload).then(data => {
+            store.dispatch('loginAndFetch', payload).then(() => {
               createMessage('恭喜您，登陆成功', 'success', 2000);
               // 1s后路由跳转到首页
               setTimeout(() => {

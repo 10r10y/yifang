@@ -1,7 +1,8 @@
 <template>
-    <div class="signup-page mx-auto p-3 w-330">
-        <ValidateForm @form-submit="onFormSubmit">
-            <div class="mb-3">
+    <div class="mx-auto p-3" style="max-width: 330px">
+        <div class="pt-3"></div>
+        <ValidateForm @form-submit="onFormSubmit" class="border rounded p-3 w-100" style="background-color: #f6f8fa">
+            <div class="mt-3">
                 <label class="form-label">邮箱地址</label>
                 <ValidateInput
                     :rules="emailRules"
@@ -10,7 +11,7 @@
                     type="text"
                 ></ValidateInput>
             </div>
-            <div class="mb-3">
+            <div>
                 <label class="form-label">用户昵称</label>
                 <ValidateInput
                     :rules="nickNameRules"
@@ -19,7 +20,7 @@
                     type="text"
                 ></ValidateInput>
             </div>
-            <div class="mb-3">
+            <div>
                 <label class="form-label">密码</label>
                 <ValidateInput
                     :rules="passwordRules"
@@ -37,6 +38,11 @@
                     type="password"
                 ></ValidateInput>
             </div>
+
+            <!-- 按键插槽 -->
+            <template #submit>
+                <button type="submit" class="btn btn-success w-100">注册</button>
+            </template>
         </ValidateForm>
     </div>
 </template>
@@ -50,7 +56,7 @@
     import ValidateInput from '../components/ValidateInput.vue';
     // ts
     import { RulesProp } from '../components/ValidateInput.vue';
-import createMessage from '@/components/CreatMessage';
+    import createMessage from '@/components/CreatMessage';
 
 
     export default defineComponent({

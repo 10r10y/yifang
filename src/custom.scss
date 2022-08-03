@@ -1,0 +1,4 @@
+// 在这里设定你的变量，所有的变量名称可以看：bootstrap/scss/variables 这个文件
+$primary: #128812;
+// 引入整体的库，这个时候上面定义的变量就会将默认值覆盖掉，注意这个文件引入要在定义变量的下方
+@import "node_modules/bootstrap/scss/bootstrap";

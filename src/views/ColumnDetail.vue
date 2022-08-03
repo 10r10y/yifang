@@ -1,5 +1,5 @@
 <template>
-    <div class="column-detail-page w-75 mx-auto">
+    <div class="column-detail-page w-75 mx-auto container-lg">
         <div class="column-info row mb-4 border-bottom pb-4 align-items-center" v-if="column">
             <div class="col-3 text-center">
                 <img :src="column.avatar && column.avatar.fitUrl" :alt="column.title" class="rounded-circle border w-100">
@@ -12,7 +12,7 @@
         <PostList :list="list"></PostList>
         <button v-if="!isLastPage"
             @click="loadMorePage"
-            class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
+            class="btn btn-outline-primary mt-2 mb-5 mx-auto d-block"
         >
             获取更多
         </button>
@@ -79,5 +79,7 @@
 </script>
 
 <style scoped>
-
+.column-detail-page {
+    max-width: 720px;
+}
 </style>

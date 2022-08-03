@@ -15,7 +15,7 @@
             <div class=" col-12 col-md-6">
                 <AuthorProfile v-if="typeof currentPost.author === 'object'"  :author="currentPost.author"></AuthorProfile>
             </div>
-            <span class="text-muted col text-right font-italic block">发表于 {{currentPost.createdAt}}</span>
+            <span class="text-muted col text-right font-italic block ms-2">发表于 {{currentPost.createdAt}}</span>
         </div>  
         
         <div v-html="currentHTML"></div>

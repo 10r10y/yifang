@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, onMounted, onUnmounted, onBeforeMount } from 'vue';
+    import { defineComponent, onUnmounted, onBeforeMount } from 'vue';
     // 外部库：自定义事件监听器 mitt
     import mitt from 'mitt';
 

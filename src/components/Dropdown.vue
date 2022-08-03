@@ -2,13 +2,15 @@
     <!-- 此处 dropdownRef 用来获取整个下拉组件，以判断是否收回 -->
     <div class="dropdown" ref="dropdownRef">    
         <!-- .prevent 防止 a 链接默认行为 -->
-        <a href="#" @click.prevent = "toggleOpen" class="btn btn-outline-light my-2">
-            {{title}}
-        </a>
+        <div href="#" @click.prevent = "toggleOpen" class="me-3 flex" style="cursor: pointer">
+            <img :src="avatar" height="36" class="avatar rounded-circle me-2">
+            <span class="dropdown-cart mt-1"></span>
+        </div>
         
-        <ul class="dropdown-menu" v-if="isOpen" aria-labelledby="dropdownMenuButton1" :style="{display : 'block'}">
+        <ul class="dropdown-menu" v-if="isOpen" aria-labelledby="dropdownMenuButton1" :style="{display: 'block'}">
             <slot></slot>
         </ul>
+        
     </div>
 </template>
 
@@ -23,7 +25,7 @@
     export default defineComponent({
         name: 'Dropdown',
         props: {
-            title: {
+            avatar: {
                 type: String,
                 required: true
             }
@@ -69,5 +71,17 @@
 </script>
 
 <style scoped>
-
+    /* 小三角 */
+    .dropdown-cart {
+        display: inline-block;
+        vertical-align: middle;
+        width: 0;
+        height: 0;
+        border: 6px solid;
+        border-color: black transparent transparent transparent;
+    }
+    .dropdown-menu {
+        top: 42px;
+        right: 0;
+    }
 </style>
