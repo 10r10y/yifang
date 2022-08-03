@@ -35,11 +35,13 @@
     })
     onMounted(()=> {
         if(textArea.value) {
-            // 组装 options
+            // 组装 options (EasyMDE 配置项)
             const config: Options = {
                 ...(props.options || {}),
                 element: textArea.value,
-                initialValue: innerValue.value
+                initialValue: innerValue.value,
+                // 关闭图标 CDN 加载
+                autoDownloadFontAwesome: false
             }
 
             // 创建实例

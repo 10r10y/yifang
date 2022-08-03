@@ -105,9 +105,7 @@
             const textArea = ref<undefined | HTMLElement>(undefined);
             // easyMDE 配置项
             const editorOptions: Options = {
-                spellChecker: false,
-                // 关闭图标 CDN 加载
-                // autoDownloadFontAwesome: false
+                spellChecker: false
             }
             const editorRef = ref<null | EditorInstance>();
             const editorStatus = reactive({
