@@ -3,11 +3,13 @@
     <div class="dropdown" ref="dropdownRef">    
         <!-- .prevent 防止 a 链接默认行为 -->
         <div href="#" @click.prevent = "toggleOpen" class="me-3 flex" style="cursor: pointer">
-            <img :src="avatar" height="36" class="avatar rounded-circle me-2">
+            <slot name="show">
+                <button class="btn btn-primary">下拉菜单</button>
+            </slot>
             <span class="dropdown-cart mt-1"></span>
         </div>
         
-        <ul class="dropdown-menu" v-if="isOpen" aria-labelledby="dropdownMenuButton1" :style="{display: 'block'}">
+        <ul class="dropdown-menu" v-if="isOpen" :style="{display: 'block'}">
             <slot></slot>
         </ul>
         
@@ -15,7 +17,8 @@
 </template>
 
 <script lang="ts">
-    import { defineComponent, ref, watch, onUnmounted } from 'vue';
+    import { defineComponent, ref, watch, onUnmounted, PropType } from 'vue';
+    import { UserProps } from '@/store';
     import useClickOutside from '../hooks/useClickOutside';
     import mitt from 'mitt';
 
@@ -25,9 +28,9 @@
     export default defineComponent({
         name: 'Dropdown',
         props: {
-            avatar: {
-                type: String,
-                required: true
+            user: {
+                type: Object as PropType<UserProps>,
+                required: false
             }
         },
         setup(){

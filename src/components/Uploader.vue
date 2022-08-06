@@ -2,14 +2,14 @@
     <div class="file-upload">
         <div class="file-upload-container" @click="triggerUpload" v-bind="$attrs">
             <slot v-if="fileStatus === 'ready'" name="default">
-                <button class="btn btn-primary">点击上传</button>
+                <div style="font-size: 20px">点 击 上 传</div>
             </slot>
             <!-- 上传成功后通过自定义属性拿到值 -->
             <slot v-else-if="fileStatus === 'success'" name="uploaded" :uploadedData="uploadedData">
-                <button class="btn btn-primary">上传成功</button>
+                <div style="font-size: 20px">上 传 成 功</div>
             </slot>
             <slot v-else  name="loading">
-                <button class="btn btn-primary">正在上传</button>
+                <div style="font-size: 20px">正 在 上 传</div>
             </slot>
         </div>
         <input 

@@ -22,7 +22,11 @@
             <!-- 已登录 -->
             <ul v-if="currentUser.isLogin" class="list-inline mb-0">
                 <li class="list-inline-item">
-                    <Dropdown :avatar="currentUser.avatar.url">
+                    <Dropdown :user="currentUser">
+                        <template #show>
+                            <img v-if="!currentUser.avatar" src="../assets/avatar.jpg" width="36" height="36" class="avatar rounded-circle me-2">
+                            <img v-else :src="currentUser.avatar.url" width="36" height="36" class="avatar rounded-circle me-2">
+                        </template>
                         <DropdownItem><router-link to="/create" class="dropdown-item">新建文章</router-link></DropdownItem>
                         <DropdownItem><router-link :to="`/column/${currentUser.column}`" class="dropdown-item">我的专栏</router-link></DropdownItem>
                         <DropdownItem><router-link to="/edit/user" class="dropdown-item">编辑资料</router-link></DropdownItem>

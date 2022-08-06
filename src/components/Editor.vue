@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { defineProps, defineEmits, ref, watch, onMounted, onUnmounted } from 'vue';
+    import { ref, watch, onMounted, onUnmounted } from 'vue';
     import EasyMDE, { Options } from 'easymde';
     // 类型：属性以及事件
     interface EditorProps {
@@ -18,6 +18,7 @@
         (type: 'blur'): void;
     }
 
+    // define... 是编译器宏，不需要再导入
     const props = defineProps<EditorProps>()
     const emit = defineEmits<EditorEvents>()
 

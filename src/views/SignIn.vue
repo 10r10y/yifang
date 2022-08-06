@@ -81,10 +81,11 @@
             ];
             const nickNameRules: RulesProp = [
                 {type: 'required', message: '用户名不能为空'},
-                
+                {type: 'nickName', message: '用户名不能包含特殊字符'}
             ];
             const passwordRules: RulesProp = [
                 {type: 'required', message: '密码不能为空'},
+                {type: 'range', message: '你的密码至少包括六位，且不能含有空格'}
             ];
             const repeatPasswordRules: RulesProp = [
                 {type: 'required', message: '密码不能为空'},

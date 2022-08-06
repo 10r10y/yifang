@@ -26,17 +26,19 @@
     import { defineComponent, PropType, reactive, onMounted, watchEffect, computed } from 'vue';
     import { emitter } from './ValidateForm.vue';
 
+    // 使用字符串字面量，规定两种输入框
+    export type TagType = 'input' | 'textarea';
+    // 规则 interface
     interface RuleProp {
-        type: 'email' | 'required' | 'range' | 'custom';
+        type: 'email' | 'required' | 'range' | 'custom' | 'nickName';
         message: string;
         validator?: () => boolean;      // 传入函数参数作为自定义规则
     }
-
-    const emailReg = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
     export type RulesProp = RuleProp[];
-    // 使用字符串字面量，规定两种输入框
-    export type TagType = 'input' | 'textarea';
+
+    // 正则
+    const emailReg = /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;     // email
+    const nickNameReg = /^[^@!#$%&'*+=?^`{|}~-]*$/;     // 不含特殊字符
 
     export default defineComponent({
         name: 'Validateinput',
@@ -54,10 +56,15 @@
         // 父组件传递的非 prop 的 attribute，设置为不在子组件根节点接收
         // 然后将 attribute 用 $attrs 设置
         inheritAttrs: false,
+
         setup(props, context) {
+            // 实现组件 v-model 的方法一：
             const inputRef = reactive({
+                // 使用一个可写的，同时具有 getter 和 setter 的计算属性
                 val: computed({
+                    // 1. get 方法需返回 modelValue prop
                     get: () => props.modelValue || '',
+                    // 2. set 方法需触发相应的事件：即改变输入框内容后通过触发 'update:modelValue' 自定义事件，将 val 作为参数传回，在自定义事件中修改上层组件 v-model 的值
                     set: val => {
                         context.emit('update:modelValue', val);
                     }
@@ -66,6 +73,7 @@
                 message: ''
             })
 
+            // 实现组件 v-model 的方法二：
             // watch(() => props.modelValue, (newValue) => {
             //     inputRef.val = newValue || ''
             // })
@@ -76,6 +84,8 @@
             //     inputRef.val = targetValue;
             //     context.emit('update:modelValue', targetValue);
             // }
+
+            // 验证传回的规则组，并返回一个 Boolean 值
             const validateInput = () => {
                 if(props.rules) {
                     // 数组的 every 方法需要每一个都为真才返回真
@@ -95,6 +105,9 @@
                             case 'custom':
                                 passed = rule.validator ? rule.validator() : true;
                                 break;
+                            case 'nickName':
+                                passed = nickNameReg.test(inputRef.val);
+                                break;
                             default:
                                 break;
                         }
@@ -106,7 +119,7 @@
                 return true;
             }
 
-            // 挂载时触发事件
+            // 组件完成初始渲染并创建 DOM 节点后触发事件，将验证函数传入 ValidateForm
             onMounted(()=>{
                 emitter.emit('form-item-created', validateInput);
             })

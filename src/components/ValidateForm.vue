@@ -31,7 +31,7 @@
         name: 'ValidateForm',
         emits: ['form-submit'],
         setup(props, context){
-            let funcArr: ValidateFunc[] = []
+            let funcArr: ValidateFunc[] = [];
             // submit 按键需要触发的函数
             const submitForm = () => {
                 // const result = funcArr.every(func => func())    // every 会在遇到第一个false就停止
@@ -39,13 +39,17 @@
                 const result = funcArr.map(func => func()).every(result => result)
                 context.emit('form-submit', result);
             }
+            
+            // 将每个 ValidateInput 返回的结果加入数组
             const callback = (func: ValidateFunc)=>{
                 funcArr.push(func)
             }
-            onBeforeMount(()=>{
-                emitter.on('form-item-created', callback);
-            })
+            
+            // 开始监听
+            emitter.on('form-item-created', callback);
+            
             onUnmounted(()=>{
+                // 听着监听
                 emitter.off('form-item-created', callback);
                 funcArr = [];
             })

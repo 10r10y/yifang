@@ -5,9 +5,6 @@
         :uploaded="uploadedData"
         @file-uploaded="onFileUploaded"
     >
-        <template #default>
-            <div class="defaultImg"> </div>
-        </template>
         <template #uploaded="dataProps">
             <img :src="dataProps.uploadedData.data.url + '?x-oss-process=image/resize,m_fill,h_200,w_200'">
         </template>
@@ -93,13 +90,6 @@
 </script>
 
 <style>
-    .defaultImg {
-        width: 180px;
-        height: 180px;
-        border-radius: 50%;
-        background-color: rgb(51, 62, 59);
-    }
-
     .circle {
         width: 200px;
         height: 200px;
