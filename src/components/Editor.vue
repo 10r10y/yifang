@@ -7,11 +7,12 @@
 <script lang="ts" setup>
     import { ref, watch, onMounted, onUnmounted } from 'vue';
     import EasyMDE, { Options } from 'easymde';
-    // 类型：属性以及事件
+    // 类型：属性
     interface EditorProps {
         modelValue?: string;
         options?:Options;
     }
+    // 类型：事件
     interface EditorEvents {
         (type: 'update:modelValue', value: string): void;
         (type: 'change', value: string): void;
@@ -38,8 +39,11 @@
         if(textArea.value) {
             // 组装 options (EasyMDE 配置项)
             const config: Options = {
+                // 展开并添加父组件通过 props 传回的配置项
                 ...(props.options || {}),
+                // DOM 节点
                 element: textArea.value,
+                // 设定初始值
                 initialValue: innerValue.value,
                 // 关闭图标 CDN 加载
                 autoDownloadFontAwesome: false
@@ -54,12 +58,15 @@
                     // 拿到当前输入框中值
                     const updateValue = easyMDEInstance.value();
                     innerValue.value = updateValue;
+                    // 支持 v-model
                     emit('update:modelValue', updateValue);
+                    // 支持 change
                     emit('change', updateValue);
                 }
             })
             easyMDEInstance.codemirror.on('blur', () => {
                 if(easyMDEInstance) {
+                    // 支持 blur
                     emit('blur');
                 }
             })

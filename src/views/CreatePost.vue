@@ -44,14 +44,6 @@
                     :class="{'is-invalid': !editorStatus.isValid}"
                 ></Editor>
                 <span v-if="!editorStatus.isValid" class="incalid-feedback mt-1">{{editorStatus.message}}</span>
-                <!-- <ValidateInput
-                    tag="textarea"
-                    rows="10"
-                    placeholder="请输入文章详情"
-                    :rules="contentRules"
-                    v-model="contentVal"
-                    type="textarea"
-                ></ValidateInput> -->
             </template>
             <template #submit>
                 <button type="submit" class="btn btn-primary d-block mx-auto w-25 mb-3">{{isEditMode ? '更新文章' : '发表文章'}}</button>
@@ -105,6 +97,7 @@
             const textArea = ref<undefined | HTMLElement>(undefined);
             // easyMDE 配置项
             const editorOptions: Options = {
+                // 关闭拼写检查：以支持中文
                 spellChecker: false
             }
             const editorRef = ref<null | EditorInstance>();

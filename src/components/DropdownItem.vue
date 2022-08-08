@@ -11,6 +11,7 @@
     export default defineComponent({
         name: 'DropdownItem',
         props: {
+            // 不可点击
             disabled: {
                 type: Boolean,
                 default: false
@@ -20,12 +21,10 @@
             const handleItemClick = () => {
                 emitter.emit('dropdown-item-clicked');
             };
-
             return {
                 handleItemClick
             }
         }
-        
     })
 </script>
 

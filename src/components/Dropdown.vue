@@ -1,14 +1,14 @@
 <template>
     <!-- 此处 dropdownRef 用来获取整个下拉组件，以判断是否收回 -->
     <div class="dropdown" ref="dropdownRef">    
-        <!-- .prevent 防止 a 链接默认行为 -->
-        <div href="#" @click.prevent = "toggleOpen" class="me-3 flex" style="cursor: pointer">
+        <!-- 下拉按键样式 -->
+        <div href="#" @click = "toggleOpen" class="me-3 flex" style="cursor: pointer">
             <slot name="show">
                 <button class="btn btn-primary">下拉菜单</button>
             </slot>
             <span class="dropdown-cart mt-1"></span>
         </div>
-        
+        <!-- 下拉菜单列表 -->
         <ul class="dropdown-menu" v-if="isOpen" :style="{display: 'block'}">
             <slot></slot>
         </ul>
@@ -34,15 +34,16 @@
             }
         },
         setup(){
+            // 下拉列表显示隐藏变量
             const isOpen = ref(false);
             const toggleOpen = () => {
                 isOpen.value = !isOpen.value;
             };
 
+            // 通过 ref 获取整个下拉菜单
             const dropdownRef = ref<HTMLElement | null>(null);
+            // 判断点击在内还是外
             const isClickOutside = useClickOutside(dropdownRef);
-
-            
 
             // 监听isClickOutside 响应式对象的变化，防止只调用一次
             watch(isClickOutside, () => {

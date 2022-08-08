@@ -74,6 +74,7 @@
                     fileInput.value.click();
                 }
             };
+            
             // 当 input-file 内容发生改变时：
             const handleFileChange = (e: Event) => {
                 const currentTarget = e.target as HTMLInputElement;
