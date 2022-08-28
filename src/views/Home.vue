@@ -42,7 +42,7 @@
 
         // 发送请求获取专栏列表
         onMounted(() => {
-          store.dispatch('fetchColumns', { pageSize: 3});
+          store.dispatch('fetchColumns', { pageSize: 4});
         })
 
         const list = computed(() => store.getters.getColumns);

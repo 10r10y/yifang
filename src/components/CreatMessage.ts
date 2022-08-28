@@ -4,7 +4,7 @@ import Message from './Message.vue';
 export type MessageType= 'success' | 'error' | 'default';
 
 // 函数式创建组件
-const createMessage = (message: string, type: MessageType, timeout?: number) => {
+const createMessage = (message: string, type: MessageType, timeout = 2000) => {
     // 1. 使用 h 函数创建 Vnode 节点
     const messageVnode = h(Message, {
         message,

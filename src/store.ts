@@ -201,8 +201,6 @@ const store = createStore<GlobalDataProps>({
                 total: count,
                 currentPage: currentPage * 1
             }
-            // state.columns.data = arrToObj(rawData.data.list);
-            // state.columns.isLoaded = true;
         },
         fetchColumn(state, rawData) {
             state.columns.data[rawData.data._id] = rawData.data;
@@ -254,7 +252,7 @@ const store = createStore<GlobalDataProps>({
     },
     getters: {
         getColumns: (state) => {
-            return objToArray(state.columns.data);
+            return objToArray(state.columns.data).filter(data => data._id !== '5f3e86d62c56ee13bb83096c');
         },
         getColumnById:(state) => (id: string) => {
             return state.columns.data[id];

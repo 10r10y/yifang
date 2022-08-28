@@ -9,10 +9,11 @@ export default function arrToObj<T extends { _id?: string}>(arr: Array<T>) {
     // prev 初始为一个空对象，为其添加以 _id 为索引， currentObj 为对象的数据
     return arr.reduce((prev, current) => {
         if(current._id){
-            prev[current._id] = current
+            prev[current._id] = current;
         }
         return prev;
     }, {} as { [key: string]: T })
+    // Indexable Types 可索引类型
 }
 
 /* const result = arrToObj(testData);

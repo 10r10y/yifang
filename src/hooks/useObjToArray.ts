@@ -11,5 +11,5 @@ export default function objToArray<T>(obj: {[key: string]: T}) {
     return Object.keys(obj).map(key => obj[key]);
 }
 
-/* const result = objToArray(testData);
-console.log(result); */
+// const result = objToArray(testData);
+// console.log(result);

@@ -45,7 +45,9 @@
             // 检测变化
             watch(() => route.params, (toParams) => {
                 // 确保要变化的路径是进入到用户的专栏
-                if ((toParams && toParams.id) === store.state.user.column) {
+                const toId = toParams && toParams.id;
+                const userColumn = store.state.user.column;
+                if (toId && userColumn && toId === userColumn) {
                     // 重新发送请求，在 store 中有对应的缓存设置
                     store.dispatch('fetchColumn', toParams.id);
                     store.dispatch('fetchPosts', toParams.id);

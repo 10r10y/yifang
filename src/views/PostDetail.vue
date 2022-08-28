@@ -7,15 +7,15 @@
         <p>确定要删除这篇文章吗？</p>
     </Modal>
     <article class="w-75 mx-auto mb-5 pb-3" v-if="currentPost">
-        <div class="img-show">
-            <img :src="currentImgUrl" alt="currentImgUrl" class="rounded-lg img-fluid my-4" v-if="currentImgUrl">
+        <div class="img-show my-4">
+            <img :src="currentImgUrl" alt="currentImgUrl" class="rounded-lg img-fluid" v-if="currentImgUrl">
         </div>
         <h2 class="mb-4">{{currentPost.title}}</h2>
         <div class="user-profile-component border-top border-bottom py-3 mb-5 align-items-center row g-0">
             <div class=" col-12 col-md-6">
                 <AuthorProfile v-if="typeof currentPost.author === 'object'"  :author="currentPost.author"></AuthorProfile>
             </div>
-            <span class="text-muted col text-right font-italic block ms-2">发表于 {{currentPost.createdAt}}</span>
+            <span class="text-muted col text-end font-italic block ms-2">发表于 {{currentPost.createdAt}}</span>
         </div>  
         
         <div v-html="currentHTML"></div>
@@ -61,8 +61,8 @@
             })
             const currentImgUrl = computed(() => {
                 if(currentPost.value && currentPost.value.image && typeof currentPost.value.image !== 'string') {
-                    const { image } = currentPost.value
-                    return (image as ImageProps).url + '?x-oss-process=image/resize,w_850'
+                    const { image } = currentPost.value;
+                    return (image as ImageProps).url;
                 } else {
                     return undefined;
                 }
@@ -115,11 +115,9 @@
 </script>
 
 <style scoped>
-    .img-show {
-        height: 100%;
-    }
     .img-show img{
         width: 100%;
+        max-height: 360px;
         height: 100%;
         object-fit: cover;
     }
