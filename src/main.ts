@@ -8,12 +8,12 @@ import 'easymde/dist/easymde.min.css';
 axios.defaults.baseURL = "http://apis.imooc.com/api/";
 axios.interceptors.request.use(config => {
     // get 请求，添加到 url 中
-    config.params = { ...config.params, icode: 'A0B28B519496B355' }
+    config.params = { ...config.params, icode: '129B40B238D2BAF1' }
     // 其他请求，添加到 body 中
     if (config.data instanceof FormData) {  // 如果是上传文件，添加到 FormData 中
-      config.data.append('icode', 'A0B28B519496B355')
+      config.data.append('icode', '129B40B238D2BAF1')
     } else {    // 普通的 body 对象，添加到 data 中
-      config.data = { ...config.data, icode: 'A0B28B519496B355' }
+      config.data = { ...config.data, icode: '129B40B238D2BAF1' }
     }
     return config
 })

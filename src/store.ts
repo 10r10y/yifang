@@ -88,8 +88,15 @@ const store = createStore<GlobalDataProps>({
     // 初始化数据
     state: {
         token: localStorage.getItem('token') || '',
-        columns: { data: {}, currentPage: 0, total: 0},
-        posts: { data: {}, loadedColumns: {}},
+        columns: { 
+            data: {}, 
+            currentPage: 0, 
+            total: 0
+        },
+        posts: { 
+            data: {}, 
+            loadedColumns: {}
+        },
         user: { isLogin: false },
         loading: false,
         error: { status: false}
@@ -119,9 +126,6 @@ const store = createStore<GlobalDataProps>({
                 return asyncAndCommit(`/columns/${cid}/posts?currentPage=${currentPage}&pageSize=${pageSize}`,
                 'fetchPosts', commit, { method: 'get' }, cid);
             }
-            // if(!state.posts.loadedColumns.includes(id)){
-            //     return asyncAndCommit(`/columns/${id}/posts`, 'fetchPosts', commit, { method: 'get'}, id);
-            // }
         },
         // 更新专栏信息
         updateColumn({ commit }, { id, payload}) {
